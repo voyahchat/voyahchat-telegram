@@ -1,0 +1,26 @@
+{
+  "name": "voyahchat-telegram",
+  "version": "1.0.0",
+  "description": "Telegram downloader/uploader for VoyahChat",
+  "scripts": {
+    "clean": "rm -rf .test",
+    "auth": "node lib/auth.js",
+    "status": "node lib/auth.js --status",
+    "download": "node lib/download.js",
+    "pinned": "node lib/pinned.js",
+    "pinned:debug": "node lib/pinned.js -v",
+    "pinned:dry": "node lib/pinned.js --dry-run",
+    "lint": "npx eslint lib test config --fix --config config/config-eslint.mjs",
+    "test": "npm run clean && node node_modules/.bin/ava --config=config/config-ava.js"
+  },
+  "dependencies": {
+    "ava": "^6.4.1",
+    "eslint": "^9.0.0",
+    "eslint-plugin-yml": "^1.19.1",
+    "globals": "^15.0.0",
+    "husky": "^9.1.7",
+    "js-yaml": "^4.1.0",
+    "sinon": "^21.0.1",
+    "telegram": "^2.26.22"
+  }
+}

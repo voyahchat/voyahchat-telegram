@@ -1,0 +1,55 @@
+settings:
+  # Retry configuration
+  maxRetries: 10
+  retryDelayBaseMs: 2000
+  retryDelayMaxMs: 60000
+  retryJitterMs: 1000
+
+  # Timeout configuration
+  timeoutBaseMs: 60000
+  timeoutPerMbMs: 30000
+  timeoutMaxMs: 600000
+
+  # API configuration
+  connectionRetries: 5
+  connectionTimeoutMs: 30000
+  messagesPerRequest: 100
+  rateLimitDelayMs: 1000
+
+# Public supergroup with topics
+chat:
+  name: voyahchat
+  sections:
+  - slug: encars
+  - slug: registration
+  - slug: ma
+  - slug: firmware
+  - slug: software
+  - slug: voyahtweaks
+  - slug: cunba
+  - slug: free
+  - slug: free-plus
+  - slug: dreamer
+  - slug: passion
+  - slug: courage
+  - slug: taishan
+  - slug: tyres
+  - slug: charging
+  - slug: audio
+  - slug: remote-control
+  - slug: service-repair
+  - slug: parts-accessories
+  - slug: tuning-detailing
+  - slug: flea-market
+  - slug: flood
+
+  # Sections without pinned messages - download entire topic
+  - name: "FAQ | ЧаВо | Частые вопросы и ответы"
+    slug: faq
+    topicId: 32898
+
+# Private channel configuration
+channel:
+  name: "Private Channel"
+  slug: "private-channel"
+  inviteHash: "lUKvryEEEQk2YmMy"

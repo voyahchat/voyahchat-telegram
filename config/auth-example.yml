@@ -1,0 +1,19 @@
+# Telegram Authentication Configuration
+#
+# This file stores your phone number and session data.
+# Copy this file to auth.yml and fill in your phone number.
+#
+# API credentials (api_id, api_hash) are in telegram.yml
+# They are not secret and can be shared.
+#
+# To authenticate:
+# 1. Copy this file to auth.yml
+# 2. Fill in your phone number
+# 3. Run: npm run auth
+# 4. Enter the verification code from Telegram app or SMS
+# 5. If 2FA is enabled, enter your password
+#
+# The session will be saved automatically after successful auth.
+
+phone: '+YOUR_PHONE_NUMBER'
+# session: will be saved after first authentication

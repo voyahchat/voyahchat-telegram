@@ -1,0 +1,8 @@
+.test
+config/auth.yml
+downloaded/
+node_modules
+.vscode
+
+# Telegram API credentials
+config/auth.yml
