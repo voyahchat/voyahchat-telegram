@@ -4,21 +4,23 @@ topics:
     topicId: 11517
     pinned: data/pinned/charging.md
     botPinnedId: 1413222
-    contentHash: 78c5a22e38886f00f1b40bf8aefea2390ea4bed8bedc1f16c0d90268f30fe528
   - title: Автозвук
     slug: audio
     topicId: 578617
     pinned: data/pinned/audio.md
     botPinnedId: 1413090
-    contentHash: 1374936e162be5a9b01af6a66050e05e1031b12a8bc5d2e3dcf23102ee954080
   - title: Выбор и покупка | Сравнение
     slug: choice
     topicId: 8973
     pinned: data/pinned/choice.md
     botPinnedId: 1413079
-    contentHash: 372986a76cf561975d0fe20a1dea2bb509bdf9ee986482a50bf4edef038d407c
   - title: Постановка на учёт
     slug: registration
     topicId: 8977
     botPinnedId: 1413056
     pinned: data/pinned/registration.md
+  - title: Voyah Courage
+    slug: courage
+    topicId: 601095
+    pinned: data/pinned/courage.md
+    botPinnedId: 1413239
