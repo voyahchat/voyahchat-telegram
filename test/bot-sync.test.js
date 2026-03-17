@@ -3,7 +3,7 @@ const sinon = require('sinon');
 const path = require('path');
 const fsPromises = require('fs').promises;
 const yaml = require('js-yaml');
-const { BotSync, contentHash } = require('../lib/bot-sync');
+const { BotSync } = require('../lib/bot-sync');
 const { TopicsConfig } = require('../lib/topics-config');
 const { TestDir } = require('./helpers/test-dir');
 
@@ -41,7 +41,6 @@ async function setupTestDir(t) {
                 topicId: 11517,
                 pinnedId: 747980,
                 botPinnedId: 500,
-                contentHash: 'old-hash',
                 pinned: 'data/pinned/charging.md',
             },
             {
@@ -80,21 +79,6 @@ async function setupTestDir(t) {
 
 test.afterEach(() => {
     sinon.restore();
-});
-
-// --- contentHash tests ---
-
-test('contentHash - should return consistent SHA-256 hash', (t) => {
-    const hash1 = contentHash('hello');
-    const hash2 = contentHash('hello');
-    t.is(hash1, hash2);
-    t.is(hash1.length, 64); // SHA-256 hex is 64 chars
-});
-
-test('contentHash - different content should produce different hashes', (t) => {
-    const hash1 = contentHash('hello');
-    const hash2 = contentHash('world');
-    t.not(hash1, hash2);
 });
 
 // --- Constructor tests ---
@@ -171,7 +155,7 @@ test('BotSync.syncTopic() - should create new message when no botPinnedId', asyn
     t.true(sendArgs.text.includes('Постановка на учёт'));
 });
 
-test('BotSync.syncTopic() - should skip when hash matches', async (t) => {
+test('BotSync.syncTopic() - should return unchanged when Telegram says message not modified', async (t) => {
     const topicsConfig = await setupTestDir(t);
     const mockApi = createMockBotApi();
 
@@ -186,23 +170,8 @@ test('BotSync.syncTopic() - should skip when hash matches', async (t) => {
         topicsConfig,
     });
 
-    // Pre-compute the correct hash (including image content)
-    const content = await topicsConfig.readPinnedFile('data/pinned/charging.md');
-    const imagePath = await topicsConfig.getImagePath('data/pinned/charging.md');
-    const absoluteImagePath = path.resolve(topicsConfig.baseDir, imagePath);
-    const imageBuffer = await fsPromises.readFile(absoluteImagePath);
-    const hash = contentHash(content + '::image::' + imageBuffer.toString('base64'));
-
-    // Update topic with correct hash
-    const config = await topicsConfig.load();
-    const topic = config.topics.find(t => t.slug === 'charging');
-    topic.contentHash = hash;
-    await topicsConfig.save(config);
-
-    // Reload and sync
-    topicsConfig.config = null;
-    const freshTopic = await topicsConfig.getTopic('charging');
-    const result = await sync.syncTopic(freshTopic);
+    const topic = await topicsConfig.getTopic('charging');
+    const result = await sync.syncTopic(topic);
 
     t.is(result.action, 'unchanged');
     t.is(mockApi.sendMessage.callCount, 0);
@@ -210,7 +179,7 @@ test('BotSync.syncTopic() - should skip when hash matches', async (t) => {
     t.is(mockApi.editMessageMedia.callCount, 1); // Should call API to verify
 });
 
-test('BotSync.syncTopic() - should edit when hash differs', async (t) => {
+test('BotSync.syncTopic() - should edit existing message with botPinnedId', async (t) => {
     const topicsConfig = await setupTestDir(t);
     const mockApi = createMockBotApi();
 
@@ -221,7 +190,6 @@ test('BotSync.syncTopic() - should edit when hash differs', async (t) => {
     });
 
     const topic = await topicsConfig.getTopic('charging');
-    // topic has botPinnedId=500 and contentHash='old-hash' which won't match
     const result = await sync.syncTopic(topic);
 
     t.is(result.action, 'updated');
@@ -302,26 +270,9 @@ test('BotSync.syncTopic() - should handle MESSAGE_NOT_MODIFIED', async (t) => {
     t.is(result.action, 'unchanged');
 });
 
-test('BotSync.syncTopic() - should recreate message when hash matches but message was deleted', async (t) => {
+test('BotSync.syncTopic() - should recreate message when message was deleted', async (t) => {
     const topicsConfig = await setupTestDir(t);
     const mockApi = createMockBotApi();
-
-    // Pre-compute the correct hash (including image content)
-    const content = await topicsConfig.readPinnedFile('data/pinned/charging.md');
-    const imagePath = await topicsConfig.getImagePath('data/pinned/charging.md');
-    const absoluteImagePath = path.resolve(topicsConfig.baseDir, imagePath);
-    const imageBuffer = await fsPromises.readFile(absoluteImagePath);
-    const hash = contentHash(content + '::image::' + imageBuffer.toString('base64'));
-
-    // Update topic with correct hash
-    const config = await topicsConfig.load();
-    const topic = config.topics.find(t => t.slug === 'charging');
-    topic.contentHash = hash;
-    await topicsConfig.save(config);
-
-    // Reload and sync
-    topicsConfig.config = null;
-    const freshTopic = await topicsConfig.getTopic('charging');
 
     // Mock editMessageMedia to throw "message not found" error
     const notFoundErr = new Error('not found');
@@ -334,7 +285,8 @@ test('BotSync.syncTopic() - should recreate message when hash matches but messag
         topicsConfig,
     });
 
-    const result = await sync.syncTopic(freshTopic);
+    const topic = await topicsConfig.getTopic('charging');
+    const result = await sync.syncTopic(topic);
 
     t.is(result.action, 'recreated');
     t.is(result.messageId, 1001); // New ID from sendPhoto
@@ -347,26 +299,9 @@ test('BotSync.syncTopic() - should recreate message when hash matches but messag
     t.is(updatedTopic.botPinnedId, 1001); // New ID, not old 500
 });
 
-test('BotSync.syncTopic() - should return unchanged when hash matches AND message exists', async (t) => {
+test('BotSync.syncTopic() - should return unchanged when message exists and not modified', async (t) => {
     const topicsConfig = await setupTestDir(t);
     const mockApi = createMockBotApi();
-
-    // Pre-compute the correct hash (including image content)
-    const content = await topicsConfig.readPinnedFile('data/pinned/charging.md');
-    const imagePath = await topicsConfig.getImagePath('data/pinned/charging.md');
-    const absoluteImagePath = path.resolve(topicsConfig.baseDir, imagePath);
-    const imageBuffer = await fsPromises.readFile(absoluteImagePath);
-    const hash = contentHash(content + '::image::' + imageBuffer.toString('base64'));
-
-    // Update topic with correct hash
-    const config = await topicsConfig.load();
-    const topic = config.topics.find(t => t.slug === 'charging');
-    topic.contentHash = hash;
-    await topicsConfig.save(config);
-
-    // Reload and sync
-    topicsConfig.config = null;
-    const freshTopic = await topicsConfig.getTopic('charging');
 
     // Mock editMessageMedia to throw "message is not modified" error
     const notModifiedErr = new Error('not modified');
@@ -379,7 +314,8 @@ test('BotSync.syncTopic() - should return unchanged when hash matches AND messag
         topicsConfig,
     });
 
-    const result = await sync.syncTopic(freshTopic);
+    const topic = await topicsConfig.getTopic('charging');
+    const result = await sync.syncTopic(topic);
 
     t.is(result.action, 'unchanged');
     t.is(mockApi.editMessageMedia.callCount, 1);
@@ -391,7 +327,7 @@ test('BotSync.syncTopic() - should return unchanged when hash matches AND messag
     t.is(updatedTopic.botPinnedId, 500); // Still old ID
 });
 
-test('BotSync.syncTopic() - should update message when hash differs', async (t) => {
+test('BotSync.syncTopic() - should update existing message via editMessageMedia', async (t) => {
     const topicsConfig = await setupTestDir(t);
     const mockApi = createMockBotApi();
 
@@ -402,7 +338,6 @@ test('BotSync.syncTopic() - should update message when hash differs', async (t) 
     });
 
     const topic = await topicsConfig.getTopic('charging');
-    // topic has botPinnedId=500 and contentHash='old-hash' which won't match
     const result = await sync.syncTopic(topic);
 
     t.is(result.action, 'updated');
@@ -506,7 +441,7 @@ test('BotSync.syncTopic() - image content change should trigger update', async (
         topicsConfig,
     });
 
-    // First sync — creates hash with image content
+    // First sync
     const topic1 = await topicsConfig.getTopic('charging');
     await sync.syncTopic(topic1);
 
@@ -521,7 +456,7 @@ test('BotSync.syncTopic() - image content change should trigger update', async (
         'DIFFERENT-image-content',
     );
 
-    // Reload config to get updated hash
+    // Reload config
     topicsConfig.config = null;
     const topic2 = await topicsConfig.getTopic('charging');
 

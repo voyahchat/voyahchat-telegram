@@ -507,16 +507,14 @@ test('TopicsConfig.updateBotPinnedId() - should update existing topic successful
     const topicsConfig = t.context.topicsConfig;
     const slug = 'registration';
     const botPinnedId = 12345;
-    const contentHash = 'abc123';
 
     // Act
-    const result = await topicsConfig.updateBotPinnedId(slug, botPinnedId, contentHash);
+    const result = await topicsConfig.updateBotPinnedId(slug, botPinnedId);
 
     // Assert
     t.true(result);
     const topic = await topicsConfig.getTopic(slug);
     t.is(topic.botPinnedId, botPinnedId);
-    t.is(topic.contentHash, contentHash);
 });
 
 test('TopicsConfig.updateBotPinnedId() - should return false for non-existent topic', async (t) => {
@@ -524,10 +522,9 @@ test('TopicsConfig.updateBotPinnedId() - should return false for non-existent to
     const topicsConfig = t.context.topicsConfig;
     const slug = 'nonexistent';
     const botPinnedId = 12345;
-    const contentHash = 'abc123';
 
     // Act
-    const result = await topicsConfig.updateBotPinnedId(slug, botPinnedId, contentHash);
+    const result = await topicsConfig.updateBotPinnedId(slug, botPinnedId);
 
     // Assert
     t.false(result);
@@ -538,16 +535,14 @@ test('TopicsConfig.updateBotPinnedId() - should save config after update', async
     const topicsConfig = t.context.topicsConfig;
     const slug = 'rules';
     const botPinnedId = 67890;
-    const contentHash = 'xyz789';
 
     // Act
-    await topicsConfig.updateBotPinnedId(slug, botPinnedId, contentHash);
+    await topicsConfig.updateBotPinnedId(slug, botPinnedId);
 
     // Assert - reload config to verify it was saved
     const newTopicsConfig = new TopicsConfig(t.context.dir.getRoot());
     const topic = await newTopicsConfig.getTopic(slug);
     t.is(topic.botPinnedId, botPinnedId);
-    t.is(topic.contentHash, contentHash);
 });
 
 test('TopicsConfig.getTopicsForBotSync() - should return only topics with pinned field', async (t) => {
@@ -595,7 +590,7 @@ test('TopicsConfig.getTopicsForBotSync() - should return empty array if no topic
 test('TopicsConfig.getTopicsForBotSync() - should include all required fields in returned topics', async (t) => {
     // Arrange
     const topicsConfig = t.context.topicsConfig;
-    await topicsConfig.updateBotPinnedId('registration', 12345, 'hash123');
+    await topicsConfig.updateBotPinnedId('registration', 12345);
 
     // Act
     const topics = await topicsConfig.getTopicsForBotSync();
@@ -607,7 +602,6 @@ test('TopicsConfig.getTopicsForBotSync() - should include all required fields in
     t.is(registrationTopic.topicId, 8977);
     t.is(registrationTopic.pinnedId, 747976);
     t.is(registrationTopic.botPinnedId, 12345);
-    t.is(registrationTopic.contentHash, 'hash123');
     t.is(registrationTopic.pinned, 'data/registration.md');
 });
 
