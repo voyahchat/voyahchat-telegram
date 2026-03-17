@@ -390,3 +390,238 @@ test('TopicsConfig - should handle custom base directory', async (t) => {
     t.is(topics[0].slug, 'custom');
     t.true(content.includes('Custom content'));
 });
+
+test('TopicsConfig.getTopicsWithPinnedId() - should return topics with pinnedId', async (t) => {
+    // Arrange
+    const topicsConfig = t.context.topicsConfig;
+
+    // Act
+    const topics = await topicsConfig.getTopicsWithPinnedId();
+
+    // Assert
+    t.true(Array.isArray(topics));
+    t.is(topics.length, 2); // registration and rules have pinnedId
+    t.is(topics[0].slug, 'registration');
+    t.is(topics[1].slug, 'rules');
+});
+
+test('TopicsConfig.getTopicsWithPinnedId() - should return empty array when no topics have pinnedId', async (t) => {
+    // Arrange
+    const configWithoutPinnedId = {
+        topics: [
+            {
+                title: 'Topic 1',
+                slug: 'topic1',
+                topicId: 1001,
+                pinned: 'data/topic1.md',
+                // No pinnedId
+            },
+        ],
+    };
+    await t.context.topicsConfig.save(configWithoutPinnedId);
+    const topicsConfig = t.context.topicsConfig;
+
+    // Act
+    const topics = await topicsConfig.getTopicsWithPinnedId();
+
+    // Assert
+    t.true(Array.isArray(topics));
+    t.is(topics.length, 0);
+});
+
+test('TopicsConfig.updatePinnedPath() - should update pinned path for topic', async (t) => {
+    // Arrange
+    const topicsConfig = t.context.topicsConfig;
+    const slug = 'registration';
+    const newPath = 'data/pinned/registration.md';
+
+    // Act
+    const updatedTopic = await topicsConfig.updatePinnedPath(slug, newPath);
+
+    // Assert
+    t.is(updatedTopic.pinned, newPath);
+
+    // Verify the change was persisted
+    const topic = await topicsConfig.getTopic(slug);
+    t.is(topic.pinned, newPath);
+});
+
+test('TopicsConfig.updatePinnedPath() - should throw error for non-existent topic', async (t) => {
+    // Arrange
+    const topicsConfig = t.context.topicsConfig;
+
+    // Act & Assert
+    await t.throwsAsync(
+        async () => await topicsConfig.updatePinnedPath('nonexistent', 'data/test.md'),
+        { message: /Topic with slug "nonexistent" not found/ },
+    );
+});
+
+test('TopicsConfig.writePinnedFile() - should write markdown content to file', async (t) => {
+    // Arrange
+    const topicsConfig = t.context.topicsConfig;
+    const pinnedPath = 'data/pinned/test.md';
+    const content = '**Bold text**\n\n[Link](https://example.com)';
+
+    // Act
+    await topicsConfig.writePinnedFile(pinnedPath, content);
+
+    // Assert
+    const filePath = path.join(t.context.dir.getRoot(), pinnedPath);
+    const savedContent = await fsPromises.readFile(filePath, 'utf8');
+    t.is(savedContent, content);
+});
+
+test('TopicsConfig.writePinnedFile() - should create directory if not exists', async (t) => {
+    // Arrange
+    const topicsConfig = t.context.topicsConfig;
+    const pinnedPath = 'data/new/nested/dir/test.md';
+    const content = 'Test content';
+
+    // Act
+    await topicsConfig.writePinnedFile(pinnedPath, content);
+
+    // Assert
+    const filePath = path.join(t.context.dir.getRoot(), pinnedPath);
+    const savedContent = await fsPromises.readFile(filePath, 'utf8');
+    t.is(savedContent, content);
+});
+
+test('TopicsConfig.writeImageFile() - should write image data to file', async (t) => {
+    // Arrange
+    const topicsConfig = t.context.topicsConfig;
+    const imagePath = 'data/pinned/test.jpg';
+    const imageData = Buffer.from('fake-image-data');
+
+    // Act
+    await topicsConfig.writeImageFile(imagePath, imageData);
+
+    // Assert
+    const filePath = path.join(t.context.dir.getRoot(), imagePath);
+    const savedData = await fsPromises.readFile(filePath);
+    t.deepEqual(savedData, imageData);
+});
+
+test('TopicsConfig.updateBotPinnedId() - should update existing topic successfully', async (t) => {
+    // Arrange
+    const topicsConfig = t.context.topicsConfig;
+    const slug = 'registration';
+    const botPinnedId = 12345;
+    const contentHash = 'abc123';
+
+    // Act
+    const result = await topicsConfig.updateBotPinnedId(slug, botPinnedId, contentHash);
+
+    // Assert
+    t.true(result);
+    const topic = await topicsConfig.getTopic(slug);
+    t.is(topic.botPinnedId, botPinnedId);
+    t.is(topic.contentHash, contentHash);
+});
+
+test('TopicsConfig.updateBotPinnedId() - should return false for non-existent topic', async (t) => {
+    // Arrange
+    const topicsConfig = t.context.topicsConfig;
+    const slug = 'nonexistent';
+    const botPinnedId = 12345;
+    const contentHash = 'abc123';
+
+    // Act
+    const result = await topicsConfig.updateBotPinnedId(slug, botPinnedId, contentHash);
+
+    // Assert
+    t.false(result);
+});
+
+test('TopicsConfig.updateBotPinnedId() - should save config after update', async (t) => {
+    // Arrange
+    const topicsConfig = t.context.topicsConfig;
+    const slug = 'rules';
+    const botPinnedId = 67890;
+    const contentHash = 'xyz789';
+
+    // Act
+    await topicsConfig.updateBotPinnedId(slug, botPinnedId, contentHash);
+
+    // Assert - reload config to verify it was saved
+    const newTopicsConfig = new TopicsConfig(t.context.dir.getRoot());
+    const topic = await newTopicsConfig.getTopic(slug);
+    t.is(topic.botPinnedId, botPinnedId);
+    t.is(topic.contentHash, contentHash);
+});
+
+test('TopicsConfig.getTopicsForBotSync() - should return only topics with pinned field', async (t) => {
+    // Arrange
+    const topicsConfig = t.context.topicsConfig;
+
+    // Act
+    const topics = await topicsConfig.getTopicsForBotSync();
+
+    // Assert
+    t.true(Array.isArray(topics));
+    t.is(topics.length, 3); // All three topics have pinned field
+    t.is(topics[0].slug, 'registration');
+    t.is(topics[1].slug, 'rules');
+    t.is(topics[2].slug, 'faq');
+});
+
+test('TopicsConfig.getTopicsForBotSync() - should return empty array if no topics have pinned field', async (t) => {
+    // Arrange
+    const configWithoutPinned = {
+        topics: [
+            {
+                title: 'Topic 1',
+                slug: 'topic1',
+                topicId: 9001,
+            },
+            {
+                title: 'Topic 2',
+                slug: 'topic2',
+                topicId: 9002,
+            },
+        ],
+    };
+    await t.context.topicsConfig.save(configWithoutPinned);
+    const topicsConfig = t.context.topicsConfig;
+
+    // Act
+    const topics = await topicsConfig.getTopicsForBotSync();
+
+    // Assert
+    t.true(Array.isArray(topics));
+    t.is(topics.length, 0);
+});
+
+test('TopicsConfig.getTopicsForBotSync() - should include all required fields in returned topics', async (t) => {
+    // Arrange
+    const topicsConfig = t.context.topicsConfig;
+    await topicsConfig.updateBotPinnedId('registration', 12345, 'hash123');
+
+    // Act
+    const topics = await topicsConfig.getTopicsForBotSync();
+
+    // Assert
+    const registrationTopic = topics.find(t => t.slug === 'registration');
+    t.is(registrationTopic.title, 'Registration');
+    t.is(registrationTopic.slug, 'registration');
+    t.is(registrationTopic.topicId, 8977);
+    t.is(registrationTopic.pinnedId, 747976);
+    t.is(registrationTopic.botPinnedId, 12345);
+    t.is(registrationTopic.contentHash, 'hash123');
+    t.is(registrationTopic.pinned, 'data/registration.md');
+});
+
+test('TopicsConfig.writeImageFile() - should create directory if not exists', async (t) => {
+    // Arrange
+    const topicsConfig = t.context.topicsConfig;
+    const imagePath = 'data/new/images/test.png';
+    const imageData = Buffer.from('fake-png-data');
+
+    // Act
+    await topicsConfig.writeImageFile(imagePath, imageData);
+
+    // Assert
+    const filePath = path.join(t.context.dir.getRoot(), imagePath);
+    const savedData = await fsPromises.readFile(filePath);
+    t.deepEqual(savedData, imageData);
+});

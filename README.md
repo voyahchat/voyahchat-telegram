@@ -1,237 +1,245 @@
-# Telegram Integration
+# VoyahChat Telegram Integration
 
-This module downloads messages from the VoyahChat Telegram group for publishing on the website.
-
-## Quick Start
-
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-2. Create authentication config:
-   ```bash
-   cp config/auth-example.yml config/auth.yml
-   ```
-
-3. Edit `config/auth.yml` and add your phone number:
-   ```yaml
-   phone: '+1234567890'
-   ```
-
-4. Authenticate with Telegram:
-   ```bash
-   npm run auth
-   ```
-   - Enter the verification code from Telegram app or SMS
-   - If 2FA is enabled, enter your password
-   - Session will be saved automatically
-
-5. Download messages:
-   ```bash
-   npm run download
-   ```
-
-## NPM Scripts
-
-- `npm run auth` - Authentication CLI script
-- `npm run status` - Check authentication status
-- `npm run download` - Download messages from Telegram
-- `npm run pinned` - Sync local markdown files to Telegram pinned messages
-- `npm run pinned:debug` - Pinned sync with verbose output
-- `npm run pinned:dry` - Pinned sync dry-run mode
-- `npm run lint` - Run ESLint
-- `npm run test` - Run tests
-
-## Configuration Files
-
-The project uses four separate configuration files:
-
-1. `config/main.yml` - API credentials (api_id, api_hash)
-2. `config/topics.yml` - Topic definitions with titles, slugs, topicIds, pinnedIds
-3. `config/download.yml` - Download settings and section list
-4. `config/auth.yml` - Authentication (phone, session) - created from auth-example.yml
+Tools for managing the VoyahChat Telegram group: downloading messages for the website and syncing pinned messages from GitHub.
 
 ## Features
 
+- **Message Download**: Download messages from Telegram topics for website publishing
+- **Pinned Message Sync (MTProto)**: Sync local markdown files to Telegram via personal account
+- **Pinned Message Sync (Bot API)**: Sync pinned messages via Telegram bot, triggered by GitHub Actions on push
+- **Image Support**: Automatically attach images to pinned messages (same filename, e.g., `topic.md` + `topic.jpg`)
 - **Resume Capability**: Interrupted downloads can be resumed
-- **Integrity Checking**: Validates downloaded files on each run
-- **Media Downloads**: Automatically downloads images, videos, and documents
-- **Timeout Handling**: Large files have configurable timeout with retries
-- **Progress Tracking**: Saves progress after each section
-- **Statistics**: Detailed download statistics and error tracking
-- **Pinned Message Sync**: Sync local markdown files with Telegram pinned messages
+- **Dry-Run Mode**: Preview changes without applying them
 
-## Pinned Message Sync
+## Architecture
 
-The pinned sync feature allows you to maintain pinned messages in Telegram topics by editing local markdown files.
+```
+┌─────────────┐    push     ┌──────────────────┐   Bot API   ┌──────────┐
+│   GitHub    │ ─────────►  │  GitHub Actions  │ ──────────► │ Telegram │
+│  (content)  │             │  (bot-sync.js)   │             │  (chat)  │
+└─────────────┘             └──────────────────┘             └──────────┘
+```
 
-### Commands
-- `npm run pinned` - Sync all markdown files to their corresponding pinned messages
-- `npm run pinned:debug` - Sync with verbose output for troubleshooting
-- `npm run pinned:dry` - Dry-run mode to preview changes without applying them
+There are two pinned sync mechanisms:
 
-### CLI Options
-- `-h/--help` - Show help information
-- `-v/--verbose` - Enable verbose output
-- `-n/--dry-run` - Preview changes without applying them
-- `-t/--topic <slug>` - Sync only a specific topic
+| | MTProto (`pinned.js`) | Bot API (`bot-sync.js`) |
+|---|---|---|
+| Auth | Personal phone + session | Bot token (BotFather) |
+| Runs on | Local machine | GitHub Actions (or local) |
+| Edit scope | Any message | Only bot's own messages |
+| Trigger | Manual | Push to `data/pinned/**` or `config/topics.yml` |
+| Dependencies | `telegram` (gramJS) | None (native `fetch`) |
 
-### Configuration
-Add a `pinned` field to topics in `config/topics.yml` pointing to the markdown file:
+## Quick Start
+
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Bot Sync Setup (GitHub Actions)
+
+This is the recommended approach for collaborative pinned message management.
+
+1. Create a bot via [@BotFather](https://t.me/BotFather)
+2. Add the bot to your Telegram group as admin with `can_pin_messages` permission
+3. Add secrets to your GitHub repository:
+   - `TELEGRAM_BOT_TOKEN` — bot token from BotFather
+   - `TELEGRAM_CHAT_ID` — numeric chat ID (e.g., `-1001234567890`)
+4. Edit markdown files in `data/pinned/` and push to `main` — the bot updates Telegram automatically
+
+#### Manual trigger
+
+```bash
+# Sync all topics
+gh workflow run sync-pinned.yml
+
+# Dry-run
+gh workflow run sync-pinned.yml -f dry_run=true
+
+# Sync specific topic
+gh workflow run sync-pinned.yml -f topic=registration
+```
+
+#### Local run
+
+```bash
+# Sync all
+TELEGRAM_BOT_TOKEN=xxx TELEGRAM_CHAT_ID=yyy npm run bot:sync
+
+# Dry-run (no real token required)
+npm run bot:sync:dry
+
+# Verbose output
+TELEGRAM_BOT_TOKEN=xxx TELEGRAM_CHAT_ID=yyy npm run bot:sync:debug
+
+# Specific topic
+TELEGRAM_BOT_TOKEN=xxx TELEGRAM_CHAT_ID=yyy npm run bot:sync -- -t registration
+```
+
+### 3. MTProto Sync Setup (personal account)
+
+For editing messages published from a personal Telegram account (requires gramJS):
+
+1. Create `config/auth.yml` from the example:
+   ```bash
+   cp config/auth-example.yml config/auth.yml
+   ```
+2. Add your phone number and run `npm run auth`
+3. Sync: `npm run pinned`
+
+### 4. Message Download
+
+```bash
+npm run auth      # First-time authentication
+npm run download  # Download messages
+```
+
+## NPM Scripts
+
+| Script | Description |
+|--------|-------------|
+| `npm run bot:sync` | Sync pinned messages via Bot API |
+| `npm run bot:sync:debug` | Bot sync with verbose output |
+| `npm run bot:sync:dry` | Bot sync dry-run (preview only) |
+| `npm run pinned` | Sync pinned messages via MTProto |
+| `npm run pinned:debug` | MTProto sync with verbose output |
+| `npm run pinned:dry` | MTProto sync dry-run |
+| `npm run pinned:download` | Download pinned messages from Telegram |
+| `npm run download` | Download messages from Telegram |
+| `npm run auth` | Authenticate with Telegram |
+| `npm run status` | Check authentication status |
+| `npm run lint` | Run ESLint |
+| `npm run test` | Run tests |
+
+## CLI Options (bot-sync and pinned)
+
+| Flag | Description |
+|------|-------------|
+| `-h`, `--help` | Show help message |
+| `-v`, `--verbose` | Enable verbose output |
+| `-n`, `--dry-run` | Preview changes without applying |
+| `-t`, `--topic <slug>` | Sync specific topic (repeatable) |
+
+## Configuration
+
+### config/topics.yml
+
+Defines forum topics and their pinned message files:
+
 ```yaml
 topics:
-  - title: "Topic Title"
-    slug: topic-slug
-    pinned: data/pinned/topic.md  # Path to markdown file
-    topicId: 12345
-    pinnedId: 67890
+  - title: "Registration"
+    slug: registration
+    topicId: 8977          # Telegram forum topic ID
+    pinnedId: 747976       # MTProto pinned message ID (for pinned.js)
+    botPinnedId: 1234567   # Bot's pinned message ID (managed by bot-sync)
+    contentHash: abc123    # Content hash for change detection (managed by bot-sync)
+    pinned: data/pinned/registration.md
 ```
 
-### Image Support
-If an image file with the same name as the markdown file exists (e.g., `topic.jpg`), it will be automatically uploaded and attached to the pinned message.
-
-## Output Structure
-
-```
-downloaded/
-├── index.json
-├── sections/
-│   └── <section-slug>/
-│       ├── <messageId>.json
-│       ├── pinned.json
-│       ├── metadata.json
-│       ├── referenced/
-│       │   └── <messageId>.json
-│       ├── media/
-│       │   └── <messageId>.<ext>
-│       └── links/
-│           └── scraper-cache.json
-└── private/
-    └── <channel-slug>/
-        ├── <messageId>.json
-        ├── metadata.json
-        └── media/
-```
-
-## Data Directory Structure
-
-```
-data/
-└── pinned/
-    ├── topic.md      # Markdown content for pinned message
-    └── topic.jpg     # Optional image for pinned message
-```
-
-## Configuration Examples
+Fields managed automatically by `bot-sync.js`:
+- `botPinnedId` — set after the bot publishes or edits a message
+- `contentHash` — SHA-256 hash of content + image, used to skip unchanged topics
 
 ### config/main.yml
+
 ```yaml
 api_id: YOUR_API_ID
 api_hash: YOUR_API_HASH
 ```
 
-### config/topics.yml
+### config/auth.yml
+
 ```yaml
-topics:
-  - title: "Topic Title"
-    slug: topic-slug
-    pinned: data/pinned/topic.md  # Optional: for pinned sync
-    topicId: 12345
-    pinnedId: 67890
+phone: '+1234567890'
+session: '...'  # Saved automatically after auth
 ```
 
-### config/download.yml
-```yaml
-settings:
-  maxRetries: 10
-  retryDelayBaseMs: 2000
-  # ... other settings
+## Data Structure
 
-chat:
-  name: chatname
-  sections:
-    - slug: section-slug
-    # ... other sections
-
-channel:
-  name: "Private Channel"
-  slug: "private-channel"
-  inviteHash: "INVITE_HASH"
+```
+data/
+└── pinned/
+    ├── registration.md     # Markdown content for pinned message
+    ├── charging.md
+    ├── charging.jpg        # Optional image (same name as .md)
+    └── ...
 ```
 
-### Download Configuration Options
+Markdown files support **bold** and [links](url) syntax. The converter (`lib/markdown.js`) translates markdown to Telegram's text + entities format.
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| maxRetries | 10 | Maximum retry attempts for failed downloads |
-| retryDelayBaseMs | 2000 | Base delay between retries (exponential backoff) |
-| retryDelayMaxMs | 60000 | Maximum delay between retries |
-| retryJitterMs | 1000 | Random jitter added to retry delay |
-| timeoutBaseMs | 60000 | Base timeout for downloads |
-| timeoutPerMbMs | 30000 | Additional timeout per MB of file size |
-| timeoutMaxMs | 600000 | Maximum timeout for any download |
-| connectionRetries | 5 | Connection retry attempts |
-| connectionTimeoutMs | 30000 | Connection timeout |
-| messagesPerRequest | 100 | Messages to fetch per API request |
-| rateLimitDelayMs | 1000 | Delay between API requests |
+## How Bot Sync Works
+
+1. On push to `main` (if `data/pinned/**` or `config/topics.yml` changed), GitHub Actions runs `bot-sync.js`
+2. For each topic with a `pinned` field in `config/topics.yml`:
+   - Reads the markdown file and computes a SHA-256 hash (includes image content if present)
+   - Compares hash with stored `contentHash` — skips if unchanged
+   - If `botPinnedId` exists: edits the message (or recreates if deleted)
+   - If no `botPinnedId`: publishes a new message and pins it
+3. Updates `config/topics.yml` with new `botPinnedId` and `contentHash`, commits with `[skip ci]`
+
+## GitHub Actions Workflow
+
+File: `.github/workflows/sync-pinned.yml`
+
+- **Trigger**: Push to `main` (paths: `data/pinned/**`, `config/topics.yml`) or manual `workflow_dispatch`
+- **Concurrency**: Only one sync runs at a time per branch
+- **Secrets**: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`
+- **Auto-commit**: Updates `config/topics.yml` with `[skip ci]` to prevent recursive triggers
+
+## Security
+
+- Bot has no HTTP endpoint (no webhook) — nothing to attack
+- Content comes only from repository files — no external input
+- Bot token stored in GitHub Secrets — not in code
+- Bot has minimal permissions: only `can_pin_messages`
+- Workflow triggers only on push to `main` with path filters
 
 ## Module Structure
 
-### Core modules
-- `auth.js` - Authentication CLI script
-- `config.js` - Configuration loader for Telegram downloader
-- `constants.js` - Module constants
-- `logger.js` - Logger utility with verbose mode support
+### Bot sync modules
+- `bot-sync.js` — Bot-based pinned message sync (entry point for GitHub Actions)
+- `bot-api.js` — Telegram Bot API wrapper (native `fetch`, no dependencies)
+
+### MTProto sync modules
+- `pinned.js` — Pinned message sync via gramJS/MTProto
+- `pinned-download.js` — Download pinned messages from Telegram
+- `entity-converter.js` — Entity converter for gramJS format
+
+### Shared modules
+- `markdown.js` — Markdown ↔ Telegram text+entities converter
+- `topics-config.js` — Topics configuration loader/saver
+- `logger.js` — Logger with verbose mode and progress display
 
 ### Download modules
-- `download.js` - Main downloader class
-- `download-index.js` - Download module index (exports all download functions)
-- `download-links.js` - External links handling
-- `download-media.js` - Media download functionality
-- `download-message.js` - Message download functionality
-- `download-utils.js` - Download utility functions
+- `download.js` — Main downloader class
+- `download-index.js`, `download-links.js`, `download-media.js`, `download-message.js`, `download-utils.js`
 
-### Pinned sync modules
-- `pinned.js` - Pinned message synchronization
-- `markdown.js` - Markdown converter for Telegram messages
-- `entity-converter.js` - Entity converter for Telegram messages
-- `topics-config.js` - Configuration loader for topics
-
-### Utility modules
-- `parser.js` - Message parser
-- `retry.js` - Retry utility with exponential backoff
-- `statistics.js` - Download statistics tracker
-- `scraper.js` - Web scraper for external pages
-- `telegram-utils.js` - Shared Telegram utility functions
+### Core modules
+- `auth.js` — Authentication CLI
+- `config.js` — Configuration loader
+- `constants.js` — Module constants
+- `logger-guard.js` — Console output suppression for gramJS
+- `telegram-utils.js` — Shared Telegram utilities
 
 ## Troubleshooting
 
-### "Message not found" errors
-Some referenced messages may have been deleted from Telegram. This is normal and the downloader will continue with available messages.
+### Bot sync: "message to edit not found"
+The bot's message was deleted from Telegram. Bot-sync will automatically recreate it and update `botPinnedId` in config.
+
+### Bot sync: messages go to wrong topic
+Check that `topicId` in `config/topics.yml` matches the actual forum topic ID in Telegram.
+
+### Bot sync: no formatting in messages
+Ensure markdown uses `**bold**` and `[text](url)` syntax. The converter produces Telegram entities from these patterns.
 
 ### Download timeouts
-Large media files may timeout after all retry attempts. Text content is always preserved. Try increasing `timeoutMaxMs` in config.
-
-### 2FA Issues
-If SMS doesn't arrive, use Apple Passwords app to generate the 2FA code. The code may also appear in your Telegram app instead of SMS.
+Large media files may timeout. Try increasing `timeoutMaxMs` in `config/download.yml`.
 
 ### Session expired
-If you get authentication errors, delete the `session` field from `config/auth.yml` and run `npm run auth` again.
+Delete the `session` field from `config/auth.yml` and run `npm run auth` again.
 
 ### Rate limiting
-If you encounter rate limiting, increase `rateLimitDelayMs` in the download configuration.
-
-### Pinned sync issues
-- Ensure the markdown file exists at the path specified in `config/topics.yml`
-- Check that you have permission to edit pinned messages in the topic
-- Use `npm run pinned:debug` to see detailed information about the sync process
-- Verify the topicId and pinnedId are correct in the configuration
-
-### Configuration file migration
-If you're upgrading from an older version:
-1. The old `config/telegram.yml` has been split into multiple files
-2. Copy your API credentials to `config/main.yml`
-3. Move topic definitions to `config/topics.yml`
-4. Move download settings to `config/download.yml`
-5. Create `config/auth.yml` from `config/auth-example.yml`
+Increase `rateLimitDelayMs` in download config. Bot-sync has a built-in 500ms delay between topics.

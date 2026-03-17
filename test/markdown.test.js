@@ -546,3 +546,218 @@ test('MarkdownConverter.toTelegram() - should handle round-trip conversion for l
     // Assert
     t.is(result, original);
 });
+
+test('MarkdownConverter.fromTelegram() - should convert italic entities', (t) => {
+    // Arrange
+    const text = 'This is italic text';
+    const entities = [
+        { className: 'MessageEntityItalic', offset: 8, length: 6 },
+    ];
+
+    // Act
+    const result = MarkdownConverter.fromTelegram(text, entities);
+
+    // Assert
+    t.is(result, 'This is _italic_ text');
+});
+
+test('MarkdownConverter.fromTelegram() - should convert code entities', (t) => {
+    // Arrange
+    const text = 'Use the command function';
+    const entities = [
+        { className: 'MessageEntityCode', offset: 8, length: 7 },
+    ];
+
+    // Act
+    const result = MarkdownConverter.fromTelegram(text, entities);
+
+    // Assert
+    t.is(result, 'Use the `command` function');
+});
+
+test('MarkdownConverter.fromTelegram() - should convert strikethrough entities', (t) => {
+    // Arrange
+    const text = 'This is deleted text';
+    const entities = [
+        { className: 'MessageEntityStrike', offset: 8, length: 7 },
+    ];
+
+    // Act
+    const result = MarkdownConverter.fromTelegram(text, entities);
+
+    // Assert
+    t.is(result, 'This is ~~deleted~~ text');
+});
+
+test('MarkdownConverter.fromTelegram() - should convert underline entities to HTML', (t) => {
+    // Arrange
+    const text = 'This is underlined text';
+    const entities = [
+        { className: 'MessageEntityUnderline', offset: 8, length: 10 },
+    ];
+
+    // Act
+    const result = MarkdownConverter.fromTelegram(text, entities);
+
+    // Assert
+    t.is(result, 'This is <u>underlined</u> text');
+});
+
+test('MarkdownConverter.fromTelegram() - should convert spoiler entities', (t) => {
+    // Arrange
+    const text = 'This is spoiler text';
+    const entities = [
+        { className: 'MessageEntitySpoiler', offset: 8, length: 7 },
+    ];
+
+    // Act
+    const result = MarkdownConverter.fromTelegram(text, entities);
+
+    // Assert
+    t.is(result, 'This is ||spoiler|| text');
+});
+
+test('MarkdownConverter.fromTelegram() - should handle multiple entity types', (t) => {
+    // Arrange
+    const text = 'Bold and italic and code';
+    const entities = [
+        { className: 'MessageEntityBold', offset: 0, length: 4 },
+        { className: 'MessageEntityItalic', offset: 9, length: 6 },
+        { className: 'MessageEntityCode', offset: 20, length: 4 },
+    ];
+
+    // Act
+    const result = MarkdownConverter.fromTelegram(text, entities);
+
+    // Assert
+    t.is(result, '**Bold** and _italic_ and `code`');
+});
+
+test('MarkdownConverter.normalizeEntityType() - should normalize className to type', (t) => {
+    // Arrange & Act & Assert
+    t.is(MarkdownConverter.normalizeEntityType({ className: 'MessageEntityBold' }), 'bold');
+    t.is(MarkdownConverter.normalizeEntityType({ className: 'MessageEntityItalic' }), 'italic');
+    t.is(MarkdownConverter.normalizeEntityType({ className: 'MessageEntityCode' }), 'code');
+    t.is(MarkdownConverter.normalizeEntityType({ className: 'MessageEntityTextUrl' }), 'text_link');
+    t.is(MarkdownConverter.normalizeEntityType({ className: 'MessageEntityStrike' }), 'strikethrough');
+});
+
+test('MarkdownConverter.normalizeEntityType() - should use type field if no className', (t) => {
+    // Arrange & Act & Assert
+    t.is(MarkdownConverter.normalizeEntityType({ type: 'bold' }), 'bold');
+    t.is(MarkdownConverter.normalizeEntityType({ type: 'italic' }), 'italic');
+});
+
+test('MarkdownConverter.normalizeEntityType() - should return empty string for unknown', (t) => {
+    // Arrange & Act & Assert
+    t.is(MarkdownConverter.normalizeEntityType({}), '');
+});
+
+// --- toTelegramHtml() tests ---
+
+test('MarkdownConverter.toTelegramHtml() - should return empty result for falsy inputs', (t) => {
+    const falsyInputs = ['', null, undefined];
+
+    for (const markdown of falsyInputs) {
+        const result = MarkdownConverter.toTelegramHtml(markdown);
+        t.is(result, '');
+    }
+});
+
+test('MarkdownConverter.toTelegramHtml() - should convert bold to <b> tags', (t) => {
+    const markdown = 'This is **bold** text';
+    const result = MarkdownConverter.toTelegramHtml(markdown);
+
+    t.is(result, 'This is <b>bold</b> text');
+});
+
+test('MarkdownConverter.toTelegramHtml() - should convert links to <a> tags', (t) => {
+    const markdown = 'Visit [Google](https://google.com) for search';
+    const result = MarkdownConverter.toTelegramHtml(markdown);
+
+    t.is(result, 'Visit <a href="https://google.com">Google</a> for search');
+});
+
+test('MarkdownConverter.toTelegramHtml() - should escape HTML special chars', (t) => {
+    const markdown = 'Text with < > & special chars';
+    const result = MarkdownConverter.toTelegramHtml(markdown);
+
+    t.is(result, 'Text with < > & special chars');
+});
+
+test('MarkdownConverter.toTelegramHtml() - should escape HTML in link text but not URL', (t) => {
+    const markdown = 'Visit [Link <test>](https://example.com) here';
+    const result = MarkdownConverter.toTelegramHtml(markdown);
+
+    t.is(result, 'Visit <a href="https://example.com">Link <test></a> here');
+});
+
+test('MarkdownConverter.toTelegramHtml() - should handle multiple bold segments', (t) => {
+    const markdown = '**First** and **second** bold';
+    const result = MarkdownConverter.toTelegramHtml(markdown);
+
+    t.is(result, '<b>First</b> and <b>second</b> bold');
+});
+
+test('MarkdownConverter.toTelegramHtml() - should handle multiple links', (t) => {
+    const markdown = '[Google](https://google.com) and [Yandex](https://yandex.com)';
+    const result = MarkdownConverter.toTelegramHtml(markdown);
+
+    t.is(result, '<a href="https://google.com">Google</a> and <a href="https://yandex.com">Yandex</a>');
+});
+
+test('MarkdownConverter.toTelegramHtml() - should handle combination of bold and links', (t) => {
+    const markdown = '**Bold** and [link](https://example.com)';
+    const result = MarkdownConverter.toTelegramHtml(markdown);
+
+    t.is(result, '<b>Bold</b> and <a href="https://example.com">link</a>');
+});
+
+test('MarkdownConverter.toTelegramHtml() - should handle nested formatting', (t) => {
+    const markdown = '[**bold link**](https://example.com)';
+    const result = MarkdownConverter.toTelegramHtml(markdown);
+
+    t.is(result, '<a href="https://example.com"><b>bold link</b></a>');
+});
+
+test('MarkdownConverter.toTelegramHtml() - should handle text without formatting', (t) => {
+    const markdown = 'Plain text without any formatting';
+    const result = MarkdownConverter.toTelegramHtml(markdown);
+
+    t.is(result, 'Plain text without any formatting');
+});
+
+test('MarkdownConverter.toTelegramHtml() - should handle Cyrillic text', (t) => {
+    const markdown = '**Постановка на учёт**, обновлено 27.01.2026';
+    const result = MarkdownConverter.toTelegramHtml(markdown);
+
+    t.is(result, '<b>Постановка на учёт</b>, обновлено 27.01.2026');
+});
+
+test('MarkdownConverter.toTelegramHtml() - should handle registration.md content structure', (t) => {
+    const markdown = '**Постановка на учёт**, обновлено 27.01.2026\n\n' +
+        '**Платные услуги чата**\n[voyahchat.ru/help](https://voyahchat.ru/help)';
+    const result = MarkdownConverter.toTelegramHtml(markdown);
+
+    t.true(result.includes('<b>Постановка на учёт</b>'));
+    t.true(result.includes('<b>Платные услуги чата</b>'));
+    t.true(result.includes('<a href="https://voyahchat.ru/help">voyahchat.ru/help</a>'));
+});
+
+test('MarkdownConverter.toTelegramHtml() - should handle edge cases', (t) => {
+    // Empty bold text
+    const result1 = MarkdownConverter.toTelegramHtml('This is **** text');
+    t.is(result1, 'This is **** text');
+
+    // Empty link text
+    const result2 = MarkdownConverter.toTelegramHtml('This is [](https://example.com) link');
+    t.is(result2, 'This is [](https://example.com) link');
+
+    // Malformed bold text
+    const result3 = MarkdownConverter.toTelegramHtml('This is **bold text');
+    t.is(result3, 'This is **bold text');
+
+    // Malformed link
+    const result4 = MarkdownConverter.toTelegramHtml('This is [link(https://example.com) text');
+    t.is(result4, 'This is [link(https://example.com) text');
+});

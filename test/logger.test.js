@@ -338,3 +338,127 @@ test('TelegramLogger.info() - should handle array arguments in log methods', (t)
     t.is(capturedArgs[1], 'Test message with array:');
     t.deepEqual(capturedArgs[2], testArray);
 });
+
+// downloadSummary tests
+
+test('TelegramLogger.downloadSummary() - should output formatted summary with all stats', (t) => {
+    // Arrange
+    const logger = new TelegramLogger();
+    logger.isTest = false; // Override test mode for this test
+    let capturedOutput = '';
+    console.log = (...args) => {
+        capturedOutput = args.join(' ');
+    };
+
+    // Act
+    logger.downloadSummary({
+        downloaded: 5,
+        skipped: 3,
+        dryRun: 2,
+        failed: 1,
+    });
+
+    // Assert
+    t.regex(capturedOutput, /\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] \[SUMMARY\]/);
+    t.true(capturedOutput.includes('Downloaded: 5'));
+    t.true(capturedOutput.includes('Skipped: 3'));
+    t.true(capturedOutput.includes('Dry-run: 2'));
+    t.true(capturedOutput.includes('Failed: 1'));
+});
+
+test('TelegramLogger.downloadSummary() - should omit zero values from output', (t) => {
+    // Arrange
+    const logger = new TelegramLogger();
+    logger.isTest = false; // Override test mode for this test
+    let capturedOutput = '';
+    console.log = (...args) => {
+        capturedOutput = args.join(' ');
+    };
+
+    // Act
+    logger.downloadSummary({
+        downloaded: 5,
+        skipped: 0,
+        dryRun: 0,
+        failed: 1,
+    });
+
+    // Assert
+    t.regex(capturedOutput, /\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] \[SUMMARY\]/);
+    t.true(capturedOutput.includes('Downloaded: 5'));
+    t.false(capturedOutput.includes('Skipped: 0'));
+    t.false(capturedOutput.includes('Dry-run: 0'));
+    t.true(capturedOutput.includes('Failed: 1'));
+});
+
+test('TelegramLogger.downloadSummary() - should show No changes for empty stats', (t) => {
+    // Arrange
+    const logger = new TelegramLogger();
+    logger.isTest = false; // Override test mode for this test
+    let capturedOutput = '';
+    console.log = (...args) => {
+        capturedOutput = args.join(' ');
+    };
+
+    // Act
+    logger.downloadSummary({
+        downloaded: 0,
+        skipped: 0,
+        dryRun: 0,
+        failed: 0,
+    });
+
+    // Assert
+    t.regex(capturedOutput, /\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] \[SUMMARY\]/);
+    t.true(capturedOutput.includes('No changes'));
+    t.false(capturedOutput.includes('Downloaded:'));
+    t.false(capturedOutput.includes('Skipped:'));
+    t.false(capturedOutput.includes('Dry-run:'));
+    t.false(capturedOutput.includes('Failed:'));
+});
+
+test('TelegramLogger.downloadSummary() - should not output in test mode', (t) => {
+    // Arrange
+    const logger = new TelegramLogger();
+    // isTest is true by default when NODE_ENV is 'test'
+    let capturedOutput = '';
+    console.log = (...args) => {
+        capturedOutput = args.join(' ');
+    };
+
+    // Act
+    logger.downloadSummary({
+        downloaded: 5,
+        skipped: 3,
+        dryRun: 2,
+        failed: 1,
+    });
+
+    // Assert
+    t.is(capturedOutput, '');
+});
+
+test('TelegramLogger.downloadSummary() - should include dry-run in output when present', (t) => {
+    // Arrange
+    const logger = new TelegramLogger();
+    logger.isTest = false; // Override test mode for this test
+    let capturedOutput = '';
+    console.log = (...args) => {
+        capturedOutput = args.join(' ');
+    };
+
+    // Act
+    logger.downloadSummary({
+        downloaded: 0,
+        skipped: 0,
+        dryRun: 5,
+        failed: 0,
+    });
+
+    // Assert
+    t.regex(capturedOutput, /\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] \[SUMMARY\]/);
+    t.true(capturedOutput.includes('Dry-run: 5'));
+    t.false(capturedOutput.includes('Downloaded:'));
+    t.false(capturedOutput.includes('Skipped:'));
+    t.false(capturedOutput.includes('Failed:'));
+});

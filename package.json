@@ -10,6 +10,10 @@
     "pinned": "node lib/pinned.js",
     "pinned:debug": "node lib/pinned.js -v",
     "pinned:dry": "node lib/pinned.js --dry-run",
+    "pinned:download": "node lib/pinned-download.js",
+    "bot:sync": "node lib/bot-sync.js",
+    "bot:sync:debug": "node lib/bot-sync.js --verbose",
+    "bot:sync:dry": "node lib/bot-sync.js --dry-run",
     "lint": "npx eslint lib test config --fix --config config/config-eslint.mjs",
     "test": "npm run clean && node node_modules/.bin/ava --config=config/config-ava.js"
   },

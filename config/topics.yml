@@ -1,117 +1,18 @@
 topics:
-  - title: Постановка на учёт
-    slug: registration
-    pinned: data/pinned/registration.md
-    topicId: 8977
-    pinnedId: 747976
-
-# without pinned now
-
-  - title: Компания E.N.Cars, заказ авто, сервис, запчасти
-    slug: encars
-    topicId: 19041
-    pinnedId: 748047
-
-  - title: МА | WeСhat/eSender | Lantu приложение
-    slug: ma
-    topicId: 177128
-    pinnedId: 286863
-
-  - title: Прошивка | SIM
-    slug: firmware
-    topicId: 11800
-    pinnedId: 276445
-
-  - title: Приложения в машине
-    slug: software
-    topicId: 558068
-    pinnedId: 558073
-
-  - title: VoyahTweaks | Smart Assist & AppManager
-    slug: voyahtweaks
-    topicId: 413159
-    pinnedId: 413297
-
-  - title: Cunba | Русификация
-    slug: cunba
-    topicId: 67145
-    pinnedId: 374690
-
-  - title: Voyah Free
-    slug: free
-    topicId: 30944
-    pinnedId: 629096
-
-  - title: Voyah Free+
-    slug: free-plus
-    topicId: 1020935
-    pinnedId: 1020936
-
-  - title: Voyah Dreamer
-    slug: dreamer
-    topicId: 44496
-    pinnedId: 138607
-
-  - title: Voyah Passion
-    slug: passion
-    topicId: 72117
-    pinnedId: 520660
-
-  - title: Voyah Courage
-    slug: courage
-    topicId: 601095
-    pinnedId: 601096
-
-  - title: Voyah Taishan
-    slug: taishan
-    topicId: 1101631
-    pinnedId: 1101632
-
-  - title: Шины | Диски
-    slug: tyres
-    topicId: 44997
-    pinnedId: 705871
-
-  - title: Зарядка и батарея
-    slug: charging
-    topicId: 11517
-    pinnedId: 747980
-
   - title: Автозвук
     slug: audio
     topicId: 578617
-    pinnedId: 578633
-
-  - title: Удалённое управление
-    slug: remote-control
-    topicId: 792213
-    pinnedId: 792214
-
-  - title: Обслуживание и ремонт
-    slug: service-repair
-    topicId: 8975
-    pinnedId: 747948
-
-  - title: Запчасти | Аксессуары
-    slug: parts-accessories
-    topicId: 8976
-    pinnedId: 409259
-
-  - title: Тюнинг | Детейлинг | Уход
-    slug: tuning-detailing
-    topicId: 44996
-    pinnedId: 748005
-
-  - title: Барахолка
-    slug: flea-market
-    topicId: 43927
-    pinnedId: 43930
-
-  - title: Флудилка
-    slug: flood
-    topicId: 1
-    pinnedId: 527150
-
-  - title: FAQ | ЧаВо | Частые вопросы и ответы
-    slug: faq
-    topicId: 32898
+    pinned: data/pinned/audio.md
+    botPinnedId: 1413090
+    contentHash: 1374936e162be5a9b01af6a66050e05e1031b12a8bc5d2e3dcf23102ee954080
+  - title: Выбор и покупка | Сравнение
+    slug: choice
+    topicId: 8973
+    pinned: data/pinned/choice.md
+    botPinnedId: 1413079
+    contentHash: 372986a76cf561975d0fe20a1dea2bb509bdf9ee986482a50bf4edef038d407c
+  - title: Постановка на учёт
+    slug: registration
+    topicId: 8977
+    botPinnedId: 1413056
+    pinned: data/pinned/registration.md
