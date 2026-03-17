@@ -1,4 +1,10 @@
 topics:
+  - title: Зарядка и батарея
+    slug: charging
+    topicId: 11517
+    pinned: data/pinned/charging.md
+    botPinnedId: 1413222
+    contentHash: 78c5a22e38886f00f1b40bf8aefea2390ea4bed8bedc1f16c0d90268f30fe528
   - title: Автозвук
     slug: audio
     topicId: 578617
