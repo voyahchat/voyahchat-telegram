@@ -24,3 +24,7 @@ topics:
     topicId: 601095
     pinned: data/pinned/courage.md
     botPinnedId: 1413239
+  - title: Прошивка | SIM
+    slug: firmware
+    topicId: 11800
+    pinned: data/pinned/firmware.md
