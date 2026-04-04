@@ -14,7 +14,10 @@
     "bot:sync": "node lib/bot-sync.js",
     "bot:sync:debug": "node lib/bot-sync.js --verbose",
     "bot:sync:dry": "node lib/bot-sync.js --dry-run",
-    "lint": "npx eslint lib test config --fix --config config/config-eslint.mjs",
+    "process-section": "node scripts/process-section.js",
+    "process-section:dry": "node scripts/process-section.js --dry-run",
+    "process-section:verbose": "node scripts/process-section.js --verbose",
+    "lint": "npx eslint lib test config scripts --fix --config config/config-eslint.mjs",
     "test": "npm run clean && node node_modules/.bin/ava --config=config/config-ava.js"
   },
   "dependencies": {
