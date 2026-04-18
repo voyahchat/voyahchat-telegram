@@ -28,3 +28,14 @@ topics:
     slug: firmware
     topicId: 11800
     pinned: data/pinned/firmware.md
+    botPinnedId: 1440215
+  - title: МА | WeСhat/eSender | Lantu приложение
+    slug: ma
+    topicId: 177128
+    pinned: data/pinned/ma.md
+    botPinnedId: 1448445
+  - title: "Pasiqo —\_Passion лаунчер"
+    slug: pasiqo
+    topicId: 1458628
+    pinned: data/pinned/pasiqo.md
+    botPinnedId: 1458631
