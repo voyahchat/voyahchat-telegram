@@ -29,7 +29,7 @@ test.beforeEach(async (t) => {
         additionalMessages: [
             { name: 'Test Message', slug: 'test-msg', messageId: 789 },
         ],
-        download: {
+        settings: {
             maxRetries: 5,
             retryDelayBaseMs: 1000,
             timeoutBaseMs: 30000,
@@ -248,3 +248,100 @@ test('TelegramConfig._validateSectionsConfig() - should throw error when section
     });
 });
 
+test('TelegramConfig.loadMainConfig() - should load API credentials from main.yml', async (t) => {
+    const config = await t.context.config.loadMainConfig();
+    t.is(config.api_id, 123456);
+    t.is(config.api_hash, 'test_hash');
+});
+
+test('TelegramConfig.loadMainConfig() - should cache result', async (t) => {
+    const config1 = await t.context.config.loadMainConfig();
+    const config2 = await t.context.config.loadMainConfig();
+    t.is(config1, config2);
+});
+
+test('TelegramConfig.loadMainConfig() - should throw error when main.yml is missing', async (t) => {
+    await fsPromises.unlink(t.context.mainConfigPath);
+
+    await t.throwsAsync(async () => await t.context.config.loadMainConfig(), {
+        message: /Failed to load main config/,
+    });
+});
+
+test('TelegramConfig.getApiCredentials() - should work without download.yml', async (t) => {
+    await fsPromises.unlink(t.context.downloadConfigPath);
+
+    t.context.config.telegramConfig = null;
+    t.context.config.mainConfig = null;
+
+    const credentials = await t.context.config.getApiCredentials();
+    t.is(credentials.api_id, 123456);
+    t.is(credentials.api_hash, 'test_hash');
+});
+
+test('TelegramConfig.getApiCredentials() - should work with invalid sections in download.yml', async (t) => {
+    const downloadYaml = yaml.dump({
+        chat: {
+            name: 'testchat',
+            sections: [
+                { slug: 'nonexistent-topic' },
+            ],
+        },
+    });
+    await fsPromises.writeFile(t.context.downloadConfigPath, downloadYaml);
+
+    t.context.config.telegramConfig = null;
+    t.context.config.mainConfig = null;
+
+    const credentials = await t.context.config.getApiCredentials();
+    t.is(credentials.api_id, 123456);
+    t.is(credentials.api_hash, 'test_hash');
+});
+
+test('TelegramConfig.getChatName() - should work with invalid sections in download.yml', async (t) => {
+    const downloadYaml = yaml.dump({
+        chat: {
+            name: 'testchat',
+            sections: [
+                { slug: 'nonexistent-topic' },
+            ],
+        },
+    });
+    await fsPromises.writeFile(t.context.downloadConfigPath, downloadYaml);
+
+    t.context.config.telegramConfig = null;
+    t.context.config.mainConfig = null;
+
+    const chatName = await t.context.config.getChatName();
+    t.is(chatName, 'testchat');
+});
+
+test('TelegramConfig.getDownloadConfig() - should return defaults when download.yml is missing', async (t) => {
+    await fsPromises.unlink(t.context.downloadConfigPath);
+
+    t.context.config.telegramConfig = null;
+
+    const config = await t.context.config.getDownloadConfig();
+    t.is(config.maxRetries, 10);
+    t.is(config.connectionRetries, 5);
+});
+
+test('TelegramConfig.loadChatConfig() - should throw error when chat is missing', async (t) => {
+    const downloadYaml = yaml.dump({
+        settings: {},
+    });
+    await fsPromises.writeFile(t.context.downloadConfigPath, downloadYaml);
+
+    t.context.config.telegramConfig = null;
+
+    await t.throwsAsync(async () => await t.context.config.loadChatConfig(), {
+        message: /Failed to load chat config/,
+    });
+});
+
+test('TelegramConfig.loadChatConfig() - should use telegramConfig cache if available', async (t) => {
+    await t.context.config.loadTelegramConfig();
+
+    const chatConfig = await t.context.config.loadChatConfig();
+    t.is(chatConfig, t.context.config.telegramConfig);
+});
