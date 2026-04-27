@@ -4,38 +4,46 @@ topics:
     topicId: 11517
     pinned: data/pinned/charging.md
     botPinnedId: 1413222
+    contentHash: e26889c562d36dfa4c045f5ec8ee561a03951fbcda9152fa820b4d1e2de01eeb
   - title: Автозвук
     slug: audio
     topicId: 578617
     pinned: data/pinned/audio.md
     botPinnedId: 1413090
+    contentHash: c13f379ef032602b4e2f5f2b02cb0e8f753ecbc7f3b45ee282dc12059b31b193
   - title: Выбор и покупка | Сравнение
     slug: choice
     topicId: 8973
     pinned: data/pinned/choice.md
     botPinnedId: 1413079
+    contentHash: 9ee7e685246b2e5793f87bca21953617c28c01daebd51f56509c1ebf9e1cfaaa
   - title: Постановка на учёт
     slug: registration
     topicId: 8977
     botPinnedId: 1413056
     pinned: data/pinned/registration.md
+    contentHash: 3073d23deaa70305765f1fb698133dd926d02aba8a1b176dadbd40a653e70b4b
   - title: Voyah Courage
     slug: courage
     topicId: 601095
     pinned: data/pinned/courage.md
     botPinnedId: 1413239
+    contentHash: d709271e6301674d568eb039fa7042efdd3de158dae908a7c33858803f4f1fad
   - title: Прошивка | SIM
     slug: firmware
     topicId: 11800
     pinned: data/pinned/firmware.md
     botPinnedId: 1440215
+    contentHash: 2e814eb80b0cc3ded4c6786430d5ce0f89346baae9df0d9a97c50011d7661cf5
   - title: МА | WeСhat/eSender | Lantu приложение
     slug: ma
     topicId: 177128
     pinned: data/pinned/ma.md
     botPinnedId: 1448445
+    contentHash: 2c8698cd5474e7ad00807c0cf70d0399d45477f8dddf33ad71ab7110865a074b
   - title: "Pasiqo —\_Passion лаунчер"
     slug: pasiqo
     topicId: 1458628
     pinned: data/pinned/pasiqo.md
     botPinnedId: 1458631
+    contentHash: 60b9aecf57e612b4716c44ce9c1590af72f35ff5556e7327e6d29f057b6037d4

@@ -619,3 +619,76 @@ test('TopicsConfig.writeImageFile() - should create directory if not exists', as
     const savedData = await fsPromises.readFile(filePath);
     t.deepEqual(savedData, imageData);
 });
+
+test('TopicsConfig.updateContentHash() - should update contentHash for topic', async (t) => {
+    const dir = new TestDir();
+    const topicsYaml = yaml.dump({
+        topics: [
+            { slug: 'charging', title: 'Charging', topicId: 1, pinned: 'data/pinned/charging.md' },
+        ],
+    });
+    await fsPromises.writeFile(path.join(dir.getConfig(), 'topics.yml'), topicsYaml);
+
+    const config = new TopicsConfig(dir.getRoot());
+    const result = await config.updateContentHash('charging', 'abc123def456');
+
+    t.is(result, true);
+
+    config.config = null;
+    const topic = await config.getTopic('charging');
+    t.is(topic.contentHash, 'abc123def456');
+});
+
+test('TopicsConfig.updateContentHash() - should return false for unknown slug', async (t) => {
+    const dir = new TestDir();
+    const topicsYaml = yaml.dump({ topics: [] });
+    await fsPromises.writeFile(path.join(dir.getConfig(), 'topics.yml'), topicsYaml);
+
+    const config = new TopicsConfig(dir.getRoot());
+    const result = await config.updateContentHash('nonexistent', 'abc123');
+
+    t.is(result, false);
+});
+
+test('TopicsConfig.getTopicsForBotSync() - should include contentHash', async (t) => {
+    const dir = new TestDir();
+    const topicsYaml = yaml.dump({
+        topics: [
+            {
+                slug: 'test',
+                title: 'Test',
+                topicId: 1,
+                pinned: 'data/test.md',
+                contentHash: 'existing-hash-123',
+            },
+        ],
+    });
+    await fsPromises.writeFile(path.join(dir.getConfig(), 'topics.yml'), topicsYaml);
+
+    const config = new TopicsConfig(dir.getRoot());
+    const topics = await config.getTopicsForBotSync();
+
+    t.is(topics.length, 1);
+    t.is(topics[0].contentHash, 'existing-hash-123');
+});
+
+test('TopicsConfig.getTopicsForBotSync() - should return null for missing contentHash', async (t) => {
+    const dir = new TestDir();
+    const topicsYaml = yaml.dump({
+        topics: [
+            {
+                slug: 'test',
+                title: 'Test',
+                topicId: 1,
+                pinned: 'data/test.md',
+            },
+        ],
+    });
+    await fsPromises.writeFile(path.join(dir.getConfig(), 'topics.yml'), topicsYaml);
+
+    const config = new TopicsConfig(dir.getRoot());
+    const topics = await config.getTopicsForBotSync();
+
+    t.is(topics.length, 1);
+    t.is(topics[0].contentHash, null);
+});

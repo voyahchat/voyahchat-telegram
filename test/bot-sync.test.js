@@ -467,6 +467,180 @@ test('BotSync.syncTopic() - image content change should trigger update', async (
     t.is(mockApi.editMessageMedia.callCount, 1);
 });
 
+test('BotSync.syncTopic() - should skip API call when content hash matches for text topic', async (t) => {
+    const topicsConfig = await setupTestDir(t);
+    const mockApi = createMockBotApi();
+
+    const sync = new BotSync({
+        chatId: '-100123',
+        botApi: mockApi,
+        topicsConfig,
+    });
+
+    // First sync to compute and store hash
+    const topic1 = await topicsConfig.getTopic('registration');
+    const result1 = await sync.syncTopic(topic1);
+    t.is(result1.action, 'created');
+    t.is(mockApi.sendMessage.callCount, 1);
+
+    // Set botPinnedId for second sync
+    await topicsConfig.updateBotPinnedId('registration', 1000);
+
+    // Reset mock call counts
+    mockApi.sendMessage.resetHistory();
+    mockApi.editMessageText.resetHistory();
+
+    // Second sync — same content, hash should match → no API call
+    topicsConfig.config = null;
+    const topic2 = await topicsConfig.getTopic('registration');
+    const result2 = await sync.syncTopic(topic2);
+
+    t.is(result2.action, 'unchanged');
+    t.is(mockApi.editMessageText.callCount, 0);
+});
+
+test('BotSync.syncTopic() - should skip API call when content hash matches for image topic', async (t) => {
+    const topicsConfig = await setupTestDir(t);
+    const mockApi = createMockBotApi();
+
+    const sync = new BotSync({
+        chatId: '-100123',
+        botApi: mockApi,
+        topicsConfig,
+    });
+
+    // First sync to compute and store hash
+    const topic1 = await topicsConfig.getTopic('charging');
+    const result1 = await sync.syncTopic(topic1);
+    t.is(result1.action, 'updated');
+    t.is(mockApi.editMessageMedia.callCount, 1);
+
+    // Reset mock call counts
+    mockApi.editMessageMedia.resetHistory();
+
+    // Second sync — same content, hash should match → no API call
+    topicsConfig.config = null;
+    const topic2 = await topicsConfig.getTopic('charging');
+    const result2 = await sync.syncTopic(topic2);
+
+    t.is(result2.action, 'unchanged');
+    t.is(mockApi.editMessageMedia.callCount, 0);
+});
+
+test('BotSync.syncTopic() - should call API when contentHash is absent', async (t) => {
+    const topicsConfig = await setupTestDir(t);
+    const mockApi = createMockBotApi();
+
+    const sync = new BotSync({
+        chatId: '-100123',
+        botApi: mockApi,
+        topicsConfig,
+    });
+
+    // charging topic has no contentHash in setupTestDir
+    const topic = await topicsConfig.getTopic('charging');
+    t.is(topic.contentHash, undefined);
+
+    const result = await sync.syncTopic(topic);
+    t.is(result.action, 'updated');
+    t.is(mockApi.editMessageMedia.callCount, 1);
+
+    // After sync, contentHash should be saved
+    topicsConfig.config = null;
+    const updatedTopic = await topicsConfig.getTopic('charging');
+    t.truthy(updatedTopic.contentHash);
+    t.is(updatedTopic.contentHash.length, 64); // SHA-256 hex = 64 chars
+});
+
+test('BotSync.syncTopic() - should call API when caption changes even if image unchanged', async (t) => {
+    const topicsConfig = await setupTestDir(t);
+    const mockApi = createMockBotApi();
+
+    const sync = new BotSync({
+        chatId: '-100123',
+        botApi: mockApi,
+        topicsConfig,
+    });
+
+    // First sync to store hash
+    const topic1 = await topicsConfig.getTopic('charging');
+    await sync.syncTopic(topic1);
+    mockApi.editMessageMedia.resetHistory();
+
+    // Change caption content only (keep same image)
+    const pinnedDir = t.context.dir.getPinned();
+    await fsPromises.writeFile(
+        path.join(pinnedDir, 'charging.md'),
+        '**Зарядка и батарея UPDATED**\n\n[ссылка](https://example.com)',
+    );
+
+    topicsConfig.config = null;
+    const topic2 = await topicsConfig.getTopic('charging');
+    const result = await sync.syncTopic(topic2);
+
+    t.is(result.action, 'updated');
+    t.is(mockApi.editMessageMedia.callCount, 1);
+});
+
+test('BotSync.syncTopic() - should call API when image changes even if caption unchanged', async (t) => {
+    const topicsConfig = await setupTestDir(t);
+    const mockApi = createMockBotApi();
+
+    const sync = new BotSync({
+        chatId: '-100123',
+        botApi: mockApi,
+        topicsConfig,
+    });
+
+    // First sync to store hash
+    const topic1 = await topicsConfig.getTopic('charging');
+    await sync.syncTopic(topic1);
+    mockApi.editMessageMedia.resetHistory();
+
+    // Change image content only (keep same caption)
+    const pinnedDir = t.context.dir.getPinned();
+    await fsPromises.writeFile(
+        path.join(pinnedDir, 'charging.jpg'),
+        'DIFFERENT-image-content',
+    );
+
+    topicsConfig.config = null;
+    const topic2 = await topicsConfig.getTopic('charging');
+    const result = await sync.syncTopic(topic2);
+
+    t.is(result.action, 'updated');
+    t.is(mockApi.editMessageMedia.callCount, 1);
+});
+
+test(
+    'BotSync.syncTopic() - should fallback to Telegram 400 detection if hash check passes but API returns 400',
+    async (t) => {
+        const topicsConfig = await setupTestDir(t);
+        const mockApi = createMockBotApi();
+
+        // Mock editMessageText to throw "message is not modified" error
+        const notModifiedErr = new Error('not modified');
+        notModifiedErr.description = 'Bad Request: message is not modified';
+        mockApi.editMessageText.rejects(notModifiedErr);
+
+        const sync = new BotSync({
+            chatId: '-100123',
+            botApi: mockApi,
+            topicsConfig,
+        });
+
+        // registration topic has no botPinnedId initially, set it
+        await topicsConfig.updateBotPinnedId('registration', 500);
+
+        const topic = await topicsConfig.getTopic('registration');
+        const result = await sync.syncTopic(topic);
+
+        // Should be marked as unchanged due to Telegram 400 response
+        t.is(result.action, 'unchanged');
+        t.is(mockApi.editMessageText.callCount, 1);
+    },
+);
+
 // --- syncAll tests ---
 
 test('BotSync.syncAll() - should sync all topics with pinned files', async (t) => {
