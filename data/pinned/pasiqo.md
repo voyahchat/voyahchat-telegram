@@ -11,3 +11,6 @@
 [t.me/voyahchat/1458628/1458637](https://t.me/voyahchat/1458628/1458637)
 [t.me/voyahchat/1458628/1458980](https://t.me/voyahchat/1458628/1458980)
 
+**Запрос на предложение новых функций**
+[t.me/voyahchat/1458628/1477454](https://t.me/voyahchat/1458628/1477454)
+
