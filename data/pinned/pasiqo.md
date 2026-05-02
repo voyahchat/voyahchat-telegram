@@ -1,5 +1,3 @@
-**Pasiqo — Passion лаунчер**, обновлено 24.04.2026
-
 **Платные услуги чата**
 [voyahchat.ru/help](https://voyahchat.ru/help)
 
@@ -12,11 +10,4 @@
 **Видео работы приложения**
 [t.me/voyahchat/1458628/1458637](https://t.me/voyahchat/1458628/1458637)
 [t.me/voyahchat/1458628/1458980](https://t.me/voyahchat/1458628/1458980)
-
-**Сообщение от разработчика**
-[t.me/voyahchat/1458628/1459283](https://t.me/voyahchat/1458628/1459283)
-
-**Если не работает погода**
-Обновиться до 1.4.2 скриптом
-[voyahchat.ru/common/pasiqo/install](https://voyahchat.ru/common/pasiqo/install)
 
