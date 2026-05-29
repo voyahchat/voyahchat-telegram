@@ -4,37 +4,37 @@ topics:
     topicId: 11517
     pinned: data/pinned/charging.md
     botPinnedId: 1413222
-    contentHash: e26889c562d36dfa4c045f5ec8ee561a03951fbcda9152fa820b4d1e2de01eeb
+    contentHash: d63d6a68cdf258804d0e579b0c03c9ad7af2eae6b12656cd92beb883263e1d4e
   - title: Настройка/замена автозвука
     slug: audio
     topicId: 578617
     pinned: data/pinned/audio.md
     botPinnedId: 1413090
-    contentHash: c13f379ef032602b4e2f5f2b02cb0e8f753ecbc7f3b45ee282dc12059b31b193
+    contentHash: 4671226720eb13db28562e02ec6c15946a14dfb452532d254e444d56751aea41
   - title: Выбор и покупка | Сравнение машин
     slug: choice
     topicId: 8973
     pinned: data/pinned/choice.md
     botPinnedId: 1413079
-    contentHash: 9ee7e685246b2e5793f87bca21953617c28c01daebd51f56509c1ebf9e1cfaaa
+    contentHash: c40dc83b763d001588f3d4e47b0e4c061d7ec3d4c7f21893bd4f0e6997fbe3ab
   - title: Постановка на учёт
     slug: registration
     topicId: 8977
     botPinnedId: 1413056
     pinned: data/pinned/registration.md
-    contentHash: 94fe72a9799aec7d6c065f7862d14f1dfad44ee7e20aa34f41ad6a2da3d394d1
+    contentHash: f338808f2926e99a64c01fc4646ff4a95b1ffa2a2118483b504703292ca9dd3e
   - title: Courage (Zhiyin)
     slug: courage
     topicId: 601095
     pinned: data/pinned/courage.md
     botPinnedId: 1413239
-    contentHash: d709271e6301674d568eb039fa7042efdd3de158dae908a7c33858803f4f1fad
+    contentHash: 6aba1dc2fd56f612dca9c3ddb892730cb51c33d9a45da8e67f2325f7fad74b30
   - title: Обсуждения прошивок машины, проблем с ними и новостей обновления. Установка SIM, выбор оператора связи
     slug: firmware
     topicId: 11800
     pinned: data/pinned/firmware.md
     botPinnedId: 1440215
-    contentHash: 62b91a1c374e24269b6066dcf4728ae44b9264aeb717c1fbeaf2897d8935ddfd
+    contentHash: 66b89e645c2637b2290d4ceb882141e1b5bdfda86436e2e24df6be6725203b35
   - title: >-
       Получение МА (Мастер Аккаунта), регистрации в WeChat/eSender (виртуальный китайский номер),
       установки/использования приложения Lantu
@@ -42,31 +42,31 @@ topics:
     topicId: 177128
     pinned: data/pinned/ma.md
     botPinnedId: 1448445
-    contentHash: f3870edbbf7758608ac65caade193216723eeea4a72d64839869f605447b5931
+    contentHash: d69f5eda3538cc143f860ef945f63833379f6eaa5192935cb2c498e265e85faa
   - title: Pasiqo — Passion лаунчер
     slug: pasiqo
     topicId: 1458628
     pinned: data/pinned/pasiqo.md
     botPinnedId: 1458631
-    contentHash: 04509f135f1b33e3e99ba4d365b3da4bf7f8a7c5cf39ad3f7dfa0b7e46fe4618
+    contentHash: 7b1fe7c109d2a01653ed547d311dff72ab1f6a1aa9539b785fdc814c5211f13c
   - title: CunBA
     slug: cunba
     topicId: 67145
     pinned: data/pinned/cunba.md
     botPinnedId: 1471292
-    contentHash: 37cbbc23e04ea45fa54f0be29feaac1f28e883bcc9e082cd79939129fe82fa60
+    contentHash: 97c798efa816b5618ea989922d83c2d2cef34f5186694469a9d83a7b78cb27ed
   - title: Компания E.N.Cars, заказ авто, сервис, запчасти
     slug: encars
     topicId: 19041
     pinned: data/pinned/encars.md
     botPinnedId: 1471297
-    contentHash: 9628b61e4a29e76b5c782c0e1434364a91a4ef918325c4c9de5d9e7b873400d7
+    contentHash: 53d23348382c733f62fb5dd7b923c0170db71e12c5b372f9d77353b90a3fbff7
   - title: Тюнинг | Детейлинг | Уход
     slug: tuning-detailing
     topicId: 44996
     pinned: data/pinned/tuning-detailing.md
     botPinnedId: 1505584
-    contentHash: c13eba06ed359717516989a43ec1f16089452c3867ff5fa898e0e4c1e1d317d6
+    contentHash: 76985cdd55c767e2ecf47d0546995e9dc91ea6a8e895e49ef7a5b2898e3bec37
   - title: Voyah Free PLUS (2026, КИТАЙ)
     slug: free-plus
     topicId: 1020935
@@ -78,7 +78,7 @@ topics:
     topicId: 44997
     pinned: data/pinned/tyres.md
     botPinnedId: 1514438
-    contentHash: dc32de9c6b00bb1e23f1d1919a6ae94ebb7285baf099d051450dc8ff383fac4c
+    contentHash: 90356a0221b89cf8807548cd748ce2ba3a48d421f1dc8b994a106dc4eb6c3a88
   - title: Taishan
     slug: taishan
     topicId: 1101631
@@ -108,7 +108,7 @@ topics:
     topicId: 792213
     pinned: data/pinned/remote-control.md
     botPinnedId: 1514446
-    contentHash: 7a323c6ebb3d83d9fb6ddd45ffd179343d7215f6b7fc7aaf2bc34695d1f27c82
+    contentHash: 671a3fbb4dc20ffaa8cc7dfad7e35db029c57568bd0f4121fc0574fd0d966577
   - title: Флудилка
     slug: flood
     topicId: 1
