@@ -176,11 +176,10 @@ topics:
     sections:
       - - rules
         - flood
-        - choice
         - flea-market
+        - choice
       - - firmware
-        - ma
-        - registration
+      - - ma
       - - software
       - - voyahtweaks
         - pasiqo
@@ -196,7 +195,8 @@ topics:
         - charging
         - audio
         - remote-control
-      - - service-repair
+      - - registration
+        - service-repair
         - parts-accessories
         - tuning-detailing
       - - uz
