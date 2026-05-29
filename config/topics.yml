@@ -10,7 +10,7 @@ topics:
     topicId: 578617
     pinned: data/pinned/audio.md
     botPinnedId: 1413090
-    contentHash: 4671226720eb13db28562e02ec6c15946a14dfb452532d254e444d56751aea41
+    contentHash: c12ac5d8dbb7a2b28a2813a8903fd87e5f09d15309891818c49492eb839a0acf
   - title: Выбор и покупка | Сравнение машин
     slug: choice
     topicId: 8973
@@ -34,13 +34,13 @@ topics:
     topicId: 11800
     pinned: data/pinned/firmware.md
     botPinnedId: 1440215
-    contentHash: 66b89e645c2637b2290d4ceb882141e1b5bdfda86436e2e24df6be6725203b35
+    contentHash: ec48efc6d0df9ffc272ac1438f7b738fbd7b887e97065bc6f0c4720eba6dad3c
   - title: Мастер аккаунт (МА) | WeChat/eSender | Приложение Lantu
     slug: ma
     topicId: 177128
     pinned: data/pinned/ma.md
     botPinnedId: 1448445
-    contentHash: d69f5eda3538cc143f860ef945f63833379f6eaa5192935cb2c498e265e85faa
+    contentHash: 9bd9fe151613131b2869966c2c3be237aa5ad9720fc4f9c8b09df248cc3c2ed6
   - title: Pasiqo — Passion лаунчер
     slug: pasiqo
     topicId: 1458628
@@ -106,7 +106,7 @@ topics:
     topicId: 792213
     pinned: data/pinned/remote-control.md
     botPinnedId: 1514446
-    contentHash: 671a3fbb4dc20ffaa8cc7dfad7e35db029c57568bd0f4121fc0574fd0d966577
+    contentHash: 3f1ababede231f48185af7eb17babf29cedda6a046f5948f52a6724da025426b
   - title: Флудилка
     slug: flood
     topicId: 1
@@ -130,7 +130,7 @@ topics:
     topicId: 558068
     pinned: data/pinned/software.md
     botPinnedId: 1514494
-    contentHash: b89c8498789bea685f570ba10ed709f59721afceda2168f6d057ced4536c500a
+    contentHash: 248a7365cbb59771b73359812cea7084c6f34c25d0f8be5aa75b0e098e476829
   - title: VoyahTweaks
     slug: voyahtweaks
     topicId: 413159
@@ -201,4 +201,4 @@ topics:
         - kz
       - - encars
     botPinnedId: 1514528
-    contentHash: 9e797fe10b0a1df37d9fde1ad69fad399686a359349d8569c92e9d511a41d54d
+    contentHash: dbefc95753ab98ce56bd68b0fb672d8fc2c4bc4205120e4d7d6f1df49b9882b7
