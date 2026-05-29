@@ -5,7 +5,7 @@ topics:
     pinned: data/pinned/charging.md
     botPinnedId: 1413222
     contentHash: d63d6a68cdf258804d0e579b0c03c9ad7af2eae6b12656cd92beb883263e1d4e
-  - title: Настройка/замена автозвука
+  - title: Aвтозвук
     slug: audio
     topicId: 578617
     pinned: data/pinned/audio.md
@@ -29,15 +29,13 @@ topics:
     pinned: data/pinned/courage.md
     botPinnedId: 1413239
     contentHash: 6aba1dc2fd56f612dca9c3ddb892730cb51c33d9a45da8e67f2325f7fad74b30
-  - title: Обсуждения прошивок машины, проблем с ними и новостей обновления. Установка SIM, выбор оператора связи
+  - title: Прошивка Free и Dreamer | SIM
     slug: firmware
     topicId: 11800
     pinned: data/pinned/firmware.md
     botPinnedId: 1440215
     contentHash: 66b89e645c2637b2290d4ceb882141e1b5bdfda86436e2e24df6be6725203b35
-  - title: >-
-      Получение МА (Мастер Аккаунта), регистрации в WeChat/eSender (виртуальный китайский номер),
-      установки/использования приложения Lantu
+  - title: Мастер аккаунт (МА) | WeChat/eSender | Приложение Lantu
     slug: ma
     topicId: 177128
     pinned: data/pinned/ma.md
@@ -103,7 +101,7 @@ topics:
     pinned: data/pinned/parts-accessories.md
     botPinnedId: 1514616
     contentHash: 15f7ff58dcc64762fd918f0666ae548ea3adc0f34d2a5b38be7b037bf3399511
-  - title: Удалённое управление машиной
+  - title: Удалённое управление
     slug: remote-control
     topicId: 792213
     pinned: data/pinned/remote-control.md
@@ -127,7 +125,7 @@ topics:
     pinned: data/pinned/service-repair.md
     botPinnedId: 1514448
     contentHash: c2a50eb590465c53d4537c3f3cae49ba75fc22e5e71248fe67e3cdef9937dd30
-  - title: Установка/настройка приложений на Free, Dreamer, Passion
+  - title: Приложения для Free, Dreamer, Passion
     slug: software
     topicId: 558068
     pinned: data/pinned/software.md
