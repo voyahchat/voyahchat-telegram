@@ -1,0 +1,87 @@
+name: Sync Pinned Messages
+
+on:
+  push:
+    paths:
+      - 'data/pinned/**'
+      - 'config/topics.yml'
+    branches:
+      - main
+  schedule:
+    # Every 6 days (04:07 UTC): force-refresh pinned messages so Telegram keeps
+    # them, and keep the npm cache warm (cache TTL = 7 days).
+    - cron: '7 4 */6 * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Run in dry-run mode (no changes)'
+        required: false
+        type: boolean
+        default: false
+      topic:
+        description: 'Specific topic to sync (optional)'
+        required: false
+        type: string
+
+concurrency:
+  group: sync-pinned-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test
+
+      - name: Run bot sync script
+        run: |
+          if [ "$EVENT_NAME" = "schedule" ]; then
+            npm run bot:sync:force
+            npm run bot:sync
+          elif [ "$DRY_RUN" = "true" ]; then
+            npm run bot:sync:dry
+          elif [ -n "$TOPIC" ]; then
+            npm run bot:sync -- --topic "$TOPIC"
+          else
+            npm run bot:sync
+          fi
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          DRY_RUN: ${{ github.event.inputs.dry_run }}
+          TOPIC: ${{ github.event.inputs.topic }}
+          EVENT_NAME: ${{ github.event_name }}
+
+      - name: Commit changes
+        run: |
+          if git diff --quiet config/topics.yml; then
+            echo "No changes to config/topics.yml"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add config/topics.yml
+            git commit -m "chore: update bot pinned IDs [skip ci]"
+            git push
+          fi

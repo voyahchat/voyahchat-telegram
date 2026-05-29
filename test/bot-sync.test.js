@@ -239,14 +239,14 @@ test('BotSync.syncTopic() - should handle message not found by recreating', asyn
     const result = await sync.syncTopic(topic);
 
     t.is(result.action, 'recreated');
-    t.is(result.messageId, 1001); // New ID from sendPhoto, NOT old 500
+    t.is(result.messageId, 1000); // Recreated without image via sendMessage
     t.is(mockApi.editMessageMedia.callCount, 1);
-    t.is(mockApi.sendPhoto.callCount, 1); // Fallback to publish
+    t.is(mockApi.sendMessage.callCount, 1); // Fallback to text-only publish
     t.is(mockApi.pinChatMessage.callCount, 1);
 
     // Verify that config was updated with the NEW message ID
     const updatedTopic = await topicsConfig.getTopic('charging');
-    t.is(updatedTopic.botPinnedId, 1001); // New ID, not old 500
+    t.is(updatedTopic.botPinnedId, 1000); // New ID, not old 500
 });
 
 test('BotSync.syncTopic() - should handle MESSAGE_NOT_MODIFIED', async (t) => {
@@ -289,14 +289,14 @@ test('BotSync.syncTopic() - should recreate message when message was deleted', a
     const result = await sync.syncTopic(topic);
 
     t.is(result.action, 'recreated');
-    t.is(result.messageId, 1001); // New ID from sendPhoto
+    t.is(result.messageId, 1000); // Recreated without image via sendMessage
     t.is(mockApi.editMessageMedia.callCount, 1);
-    t.is(mockApi.sendPhoto.callCount, 1); // Fallback to publish
+    t.is(mockApi.sendMessage.callCount, 1); // Fallback to text-only publish
     t.is(mockApi.pinChatMessage.callCount, 1);
 
     // Verify that config was updated with the NEW message ID
     const updatedTopic = await topicsConfig.getTopic('charging');
-    t.is(updatedTopic.botPinnedId, 1001); // New ID, not old 500
+    t.is(updatedTopic.botPinnedId, 1000); // New ID, not old 500
 });
 
 test('BotSync.syncTopic() - should return unchanged when message exists and not modified', async (t) => {
@@ -366,6 +366,64 @@ test('BotSync.syncTopic() - should return failed on unexpected error', async (t)
 
     t.is(result.action, 'failed');
     t.true(result.error.includes('Unexpected server error'));
+});
+
+test('BotSync.syncTopic() - should log title and topicId on failure', async (t) => {
+    const topicsConfig = await setupTestDir(t);
+    const mockApi = createMockBotApi();
+
+    mockApi.editMessageMedia.rejects(new Error('there is no text in the message to edit'));
+    mockApi.editMessageText.rejects(new Error('there is no text in the message to edit'));
+
+    const sync = new BotSync({
+        chatId: '-100123',
+        botApi: mockApi,
+        topicsConfig,
+    });
+
+    const sandbox = sinon.createSandbox();
+    const spy = sandbox.spy(sync.logger, 'actionComplete');
+
+    const topic = await topicsConfig.getTopic('charging');
+    await sync.syncTopic(topic);
+
+    const failedCall = spy.getCalls().find(c => c.args[0] === 'failed');
+    const errorCall = spy.getCalls().find(c => c.args[0] === 'error');
+
+    t.truthy(failedCall);
+    t.true(failedCall.args[2].includes(String(topic.topicId)));
+
+    t.truthy(errorCall);
+    t.true(errorCall.args[2].includes(String(topic.topicId)));
+    t.true(errorCall.args[2].includes('there is no text'));
+});
+
+test('BotSync.syncTopic() - should countdown and retry on rate limit', async (t) => {
+    const topicsConfig = await setupTestDir(t);
+    const mockApi = createMockBotApi();
+
+    // First attempt rate-limited, second attempt succeeds
+    mockApi.editMessageMedia
+        .onFirstCall().rejects(new Error('Too Many Requests: retry after 1'));
+
+    const sync = new BotSync({
+        chatId: '-100123',
+        botApi: mockApi,
+        topicsConfig,
+    });
+
+    const sandbox = sinon.createSandbox();
+    const countdownStub = sandbox.stub(sync.logger, 'countdown').resolves();
+
+    const topic = await topicsConfig.getTopic('charging');
+    const result = await sync.syncTopic(topic);
+
+    t.is(countdownStub.callCount, 1);
+    t.is(countdownStub.firstCall.args[2], 'Rate limited, waiting');
+    t.is(mockApi.editMessageMedia.callCount, 2);
+    t.is(result.action, 'updated');
+
+    sandbox.restore();
 });
 
 // --- Image-related tests ---
@@ -640,6 +698,76 @@ test(
         t.is(mockApi.editMessageText.callCount, 1);
     },
 );
+
+// --- force mode tests ---
+
+test('BotSync.syncTopic() - force should update even when content hash matches', async (t) => {
+    const topicsConfig = await setupTestDir(t);
+    const mockApi = createMockBotApi();
+
+    // First sync (no force) stores the content hash for charging
+    const sync = new BotSync({ chatId: '-100123', botApi: mockApi, topicsConfig });
+    const topic1 = await topicsConfig.getTopic('charging');
+    await sync.syncTopic(topic1);
+    mockApi.editMessageMedia.resetHistory();
+
+    // Second sync with same content but force=true must still edit
+    topicsConfig.config = null;
+    const forceSync = new BotSync({ chatId: '-100123', botApi: mockApi, topicsConfig, force: true });
+    const topic2 = await topicsConfig.getTopic('charging');
+    const result = await forceSync.syncTopic(topic2);
+
+    t.is(result.action, 'updated');
+    t.is(mockApi.editMessageMedia.callCount, 1);
+});
+
+test('BotSync.syncTopic() - force should append zero-width marker to payload', async (t) => {
+    const topicsConfig = await setupTestDir(t);
+    const mockApi = createMockBotApi();
+
+    // Create + store hash for text-only registration topic
+    const sync = new BotSync({ chatId: '-100123', botApi: mockApi, topicsConfig });
+    const topic1 = await topicsConfig.getTopic('registration');
+    await sync.syncTopic(topic1);
+
+    // Force sync edits the existing message with the marker appended
+    topicsConfig.config = null;
+    const forceSync = new BotSync({ chatId: '-100123', botApi: mockApi, topicsConfig, force: true });
+    const topic2 = await topicsConfig.getTopic('registration');
+    const result = await forceSync.syncTopic(topic2);
+
+    t.is(result.action, 'updated');
+    t.is(mockApi.editMessageText.callCount, 1);
+    const editArgs = mockApi.editMessageText.firstCall.args[0];
+    t.true(editArgs.text.endsWith('​'));
+});
+
+test('BotSync.syncTopic() - force should toggle marker across runs', async (t) => {
+    const topicsConfig = await setupTestDir(t);
+    const mockApi = createMockBotApi();
+
+    // Seed hash with a normal sync
+    const sync = new BotSync({ chatId: '-100123', botApi: mockApi, topicsConfig });
+    const topic1 = await topicsConfig.getTopic('registration');
+    await sync.syncTopic(topic1);
+
+    // First force run — adds marker
+    topicsConfig.config = null;
+    const forceSync = new BotSync({ chatId: '-100123', botApi: mockApi, topicsConfig, force: true });
+    const runA = await forceSync.syncTopic(await topicsConfig.getTopic('registration'));
+    const textA = mockApi.editMessageText.lastCall.args[0].text;
+
+    // Second force run — removes marker (toggle)
+    topicsConfig.config = null;
+    const runB = await forceSync.syncTopic(await topicsConfig.getTopic('registration'));
+    const textB = mockApi.editMessageText.lastCall.args[0].text;
+
+    t.is(runA.action, 'updated');
+    t.is(runB.action, 'updated');
+    t.not(textA, textB);
+    t.true(textA.endsWith('​'));
+    t.false(textB.endsWith('​'));
+});
 
 // --- syncAll tests ---
 

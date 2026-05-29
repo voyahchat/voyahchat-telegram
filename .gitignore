@@ -1,8 +1,10 @@
 .test
-config/auth.yml
-downloaded/
-node_modules
 .vscode
+.claude
+
+plans
+downloaded
+node_modules
 
 # Telegram API credentials
 config/auth.yml

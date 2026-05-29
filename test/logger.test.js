@@ -1,4 +1,5 @@
 const test = require('ava');
+const sinon = require('sinon');
 const { TelegramLogger, createTelegramClientLogger } = require('../lib/logger');
 
 // Store original console methods
@@ -461,4 +462,106 @@ test('TelegramLogger.downloadSummary() - should include dry-run in output when p
     t.false(capturedOutput.includes('Downloaded:'));
     t.false(capturedOutput.includes('Skipped:'));
     t.false(capturedOutput.includes('Failed:'));
+});
+
+// countdown tests
+
+test('TelegramLogger.countdown() - should resolve immediately without output in test mode', async (t) => {
+    // Arrange
+    const logger = new TelegramLogger();
+    // isTest is true by default when NODE_ENV is 'test'
+    let capturedOutput = '';
+    console.log = (...args) => { capturedOutput = args.join(' '); };
+
+    // Act
+    await logger.countdown(123, 5, 'Rate limited, waiting');
+
+    // Assert
+    t.is(capturedOutput, '');
+});
+
+test.serial('TelegramLogger.countdown() - should print a static line with message id when not a TTY', async (t) => {
+    // Arrange
+    const logger = new TelegramLogger();
+    logger.isTest = false;
+    const clock = sinon.useFakeTimers();
+    const originalIsTty = process.stdout.isTTY;
+    process.stdout.isTTY = false;
+    const logSpy = sinon.spy();
+    console.log = logSpy;
+
+    try {
+        // Act
+        const done = logger.countdown(42, 3, 'Rate limited, waiting');
+        await clock.tickAsync(3000);
+        await done;
+
+        // Assert
+        t.is(logSpy.callCount, 1);
+        t.regex(logSpy.firstCall.args[0], /\[WAIT\] Message 42: Rate limited, waiting 3s\.\.\./);
+    } finally {
+        process.stdout.isTTY = originalIsTty;
+        clock.restore();
+    }
+});
+
+test.serial('TelegramLogger.countdown() - should omit message id prefix when not provided', async (t) => {
+    // Arrange
+    const logger = new TelegramLogger();
+    logger.isTest = false;
+    const clock = sinon.useFakeTimers();
+    const originalIsTty = process.stdout.isTTY;
+    process.stdout.isTTY = false;
+    const logSpy = sinon.spy();
+    console.log = logSpy;
+
+    try {
+        // Act
+        const done = logger.countdown(null, 2, 'Rate limited. Waiting');
+        await clock.tickAsync(2000);
+        await done;
+
+        // Assert
+        t.is(logSpy.callCount, 1);
+        t.regex(logSpy.firstCall.args[0], /\[WAIT\] Rate limited\. Waiting 2s\.\.\./);
+        t.false(logSpy.firstCall.args[0].includes('Message'));
+    } finally {
+        process.stdout.isTTY = originalIsTty;
+        clock.restore();
+    }
+});
+
+test.serial('TelegramLogger.countdown() - should redraw remaining seconds in place on a TTY', async (t) => {
+    // Arrange
+    const logger = new TelegramLogger();
+    logger.isTest = false;
+    const clock = sinon.useFakeTimers();
+    const originalIsTty = process.stdout.isTTY;
+    process.stdout.isTTY = true;
+    const writeStub = sinon.stub(process.stdout, 'write').returns(true);
+
+    try {
+        // Act
+        const done = logger.countdown(7, 3, 'Rate limited, waiting');
+
+        // Assert - initial draw shows full duration
+        t.true(writeStub.firstCall.args[0].includes('Message 7: Rate limited, waiting 3s...'));
+
+        // Tick one second - redraw shows 2s with clear sequence
+        await clock.tickAsync(1000);
+        const secondCall = writeStub.getCall(1).args[0];
+        t.true(secondCall.startsWith('\r\x1b[K'));
+        t.true(secondCall.includes('2s...'));
+
+        // Finish countdown
+        await clock.tickAsync(2000);
+        await done;
+
+        // Assert - final write clears the line
+        t.is(writeStub.lastCall.args[0], '\r\x1b[K');
+    } finally {
+        writeStub.restore();
+        process.stdout.isTTY = originalIsTty;
+        clock.restore();
+    }
 });

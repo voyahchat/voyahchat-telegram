@@ -5,13 +5,13 @@ topics:
     pinned: data/pinned/charging.md
     botPinnedId: 1413222
     contentHash: e26889c562d36dfa4c045f5ec8ee561a03951fbcda9152fa820b4d1e2de01eeb
-  - title: Автозвук
+  - title: Настройка/замена автозвука
     slug: audio
     topicId: 578617
     pinned: data/pinned/audio.md
     botPinnedId: 1413090
     contentHash: c13f379ef032602b4e2f5f2b02cb0e8f753ecbc7f3b45ee282dc12059b31b193
-  - title: Выбор и покупка | Сравнение
+  - title: Выбор и покупка | Сравнение машин
     slug: choice
     topicId: 8973
     pinned: data/pinned/choice.md
@@ -22,28 +22,185 @@ topics:
     topicId: 8977
     botPinnedId: 1413056
     pinned: data/pinned/registration.md
-    contentHash: 3073d23deaa70305765f1fb698133dd926d02aba8a1b176dadbd40a653e70b4b
-  - title: Voyah Courage
+    contentHash: 94fe72a9799aec7d6c065f7862d14f1dfad44ee7e20aa34f41ad6a2da3d394d1
+  - title: Courage (Zhiyin)
     slug: courage
     topicId: 601095
     pinned: data/pinned/courage.md
     botPinnedId: 1413239
     contentHash: d709271e6301674d568eb039fa7042efdd3de158dae908a7c33858803f4f1fad
-  - title: Прошивка | SIM
+  - title: Обсуждения прошивок машины, проблем с ними и новостей обновления. Установка SIM, выбор оператора связи
     slug: firmware
     topicId: 11800
     pinned: data/pinned/firmware.md
     botPinnedId: 1440215
-    contentHash: 2e814eb80b0cc3ded4c6786430d5ce0f89346baae9df0d9a97c50011d7661cf5
-  - title: МА | WeСhat/eSender | Lantu приложение
+    contentHash: 62b91a1c374e24269b6066dcf4728ae44b9264aeb717c1fbeaf2897d8935ddfd
+  - title: >-
+      Получение МА (Мастер Аккаунта), регистрации в WeChat/eSender (виртуальный китайский номер),
+      установки/использования приложения Lantu
     slug: ma
     topicId: 177128
     pinned: data/pinned/ma.md
     botPinnedId: 1448445
-    contentHash: 2c8698cd5474e7ad00807c0cf70d0399d45477f8dddf33ad71ab7110865a074b
-  - title: "Pasiqo —\_Passion лаунчер"
+    contentHash: f3870edbbf7758608ac65caade193216723eeea4a72d64839869f605447b5931
+  - title: Pasiqo — Passion лаунчер
     slug: pasiqo
     topicId: 1458628
     pinned: data/pinned/pasiqo.md
     botPinnedId: 1458631
-    contentHash: 60b9aecf57e612b4716c44ce9c1590af72f35ff5556e7327e6d29f057b6037d4
+    contentHash: 04509f135f1b33e3e99ba4d365b3da4bf7f8a7c5cf39ad3f7dfa0b7e46fe4618
+  - title: CunBA
+    slug: cunba
+    topicId: 67145
+    pinned: data/pinned/cunba.md
+    botPinnedId: 1471292
+    contentHash: 37cbbc23e04ea45fa54f0be29feaac1f28e883bcc9e082cd79939129fe82fa60
+  - title: Компания E.N.Cars, заказ авто, сервис, запчасти
+    slug: encars
+    topicId: 19041
+    pinned: data/pinned/encars.md
+    botPinnedId: 1471297
+    contentHash: 9628b61e4a29e76b5c782c0e1434364a91a4ef918325c4c9de5d9e7b873400d7
+  - title: Тюнинг | Детейлинг | Уход
+    slug: tuning-detailing
+    topicId: 44996
+    pinned: data/pinned/tuning-detailing.md
+    botPinnedId: 1505584
+    contentHash: c13eba06ed359717516989a43ec1f16089452c3867ff5fa898e0e4c1e1d317d6
+  - title: Voyah Free PLUS (2026, КИТАЙ)
+    slug: free-plus
+    topicId: 1020935
+    pinned: data/pinned/free-plus.md
+    botPinnedId: 1514270
+    contentHash: 8e55e770d5e0a5493727f8ce3a64614f02596242cb86884e11c2dda9f8275595
+  - title: Шины | Диски | Тормоза
+    slug: tyres
+    topicId: 44997
+    pinned: data/pinned/tyres.md
+    botPinnedId: 1514438
+    contentHash: dc32de9c6b00bb1e23f1d1919a6ae94ebb7285baf099d051450dc8ff383fac4c
+  - title: Taishan
+    slug: taishan
+    topicId: 1101631
+    pinned: data/pinned/taishan.md
+    botPinnedId: 1514440
+    contentHash: 5306d3257653a4f72bb8e9efd6f1fc8e8dd33a4c2dd826a2da52ec116dc407a5
+  - title: Taishan X8
+    slug: taishan-x8
+    topicId: 1436335
+    pinned: data/pinned/taishan-x8.md
+    botPinnedId: 1514442
+    contentHash: dc8688cc345d4509a1a9826110ef7b93489ffcc778b8b620ec70e45deb47b1d7
+  - title: Passion
+    slug: passion
+    topicId: 72117
+    pinned: data/pinned/passion.md
+    botPinnedId: 1514489
+    contentHash: 600a89d74e92de0abd18a2a817f3d8548fe4406d6cc80aed17fa24b1abb1e7cf
+  - title: Запчасти | Аксессуары
+    slug: parts-accessories
+    topicId: 8976
+    pinned: data/pinned/parts-accessories.md
+    botPinnedId: 1514616
+    contentHash: 15f7ff58dcc64762fd918f0666ae548ea3adc0f34d2a5b38be7b037bf3399511
+  - title: Удалённое управление машиной
+    slug: remote-control
+    topicId: 792213
+    pinned: data/pinned/remote-control.md
+    botPinnedId: 1514446
+    contentHash: 7a323c6ebb3d83d9fb6ddd45ffd179343d7215f6b7fc7aaf2bc34695d1f27c82
+  - title: Флудилка
+    slug: flood
+    topicId: 1
+    pinned: data/pinned/flood.md
+    botPinnedId: 1514525
+    contentHash: 7d16bac2396fb2d5ef8b9378ea591ba3b40c53232044dbc549c669ccd483eb82
+  - title: Voyah Free
+    slug: free
+    topicId: 30944
+    pinned: data/pinned/free.md
+    botPinnedId: 1514492
+    contentHash: 48b9bef1ddc9abf520b8489a649eb81435658d490364c56f6af4f244c396793c
+  - title: Обслуживание и ремонт
+    slug: service-repair
+    topicId: 8975
+    pinned: data/pinned/service-repair.md
+    botPinnedId: 1514448
+    contentHash: c2a50eb590465c53d4537c3f3cae49ba75fc22e5e71248fe67e3cdef9937dd30
+  - title: Установка/настройка приложений на Free, Dreamer, Passion
+    slug: software
+    topicId: 558068
+    pinned: data/pinned/software.md
+    botPinnedId: 1514494
+    contentHash: b89c8498789bea685f570ba10ed709f59721afceda2168f6d057ced4536c500a
+  - title: VoyahTweaks
+    slug: voyahtweaks
+    topicId: 413159
+    pinned: data/pinned/voyahtweaks.md
+    botPinnedId: 1514450
+    contentHash: cd97518279a62b4a0c527ee0382a9c471115e4eefce7d8b03d12938e5fec0f38
+  - title: Voyah Dreamer
+    slug: dreamer
+    topicId: 44496
+    pinned: data/pinned/dreamer.md
+    botPinnedId: 1514452
+    contentHash: ab000a143eba53284b7921e8b6721d4ffd295d69743450b317541d066f83714e
+  - title: Барахолка
+    slug: flea-market
+    topicId: 43927
+    pinned: data/pinned/flea-market.md
+    botPinnedId: 1514454
+    contentHash: 514b0d786f8c5a4b720ec33fc581e5aaf58c320dcfe2f968507fef83bc01c0c4
+  - title: Voyah в UZ
+    slug: uz
+    topicId: 622445
+    pinned: data/pinned/uz.md
+    botPinnedId: 1514496
+    contentHash: 3e1f40a292d83eccc1bfb4074ea66eeb01f67e1bc662e0f862e184b943c765be
+  - title: Voyah в KZ
+    slug: kz
+    topicId: 332230
+    pinned: data/pinned/kz.md
+    botPinnedId: 1514498
+    contentHash: d10c5b78c99d521a4812df6169d0809f6216592167ec94ecb713b7959742a4e9
+  - title: Правила чата
+    slug: rules
+    topicId: 8978
+    pinned: data/pinned/rules.md
+    botPinnedId: 1514500
+    contentHash: 38b70681673a87d5c72eeaa3e7c8aa9c5e78d7a804919e997fbe19dbce940218
+  - title: FAQ | ЧаВо | Частые вопросы и ответы
+    slug: faq
+    topicId: 32898
+    pinned: data/pinned/faq.md
+    sections:
+      - - rules
+        - flood
+        - choice
+        - flea-market
+      - - firmware
+        - ma
+        - registration
+      - - software
+        - voyahtweaks
+        - cunba
+        - pasiqo
+      - - free
+        - free-plus
+        - dreamer
+        - passion
+        - courage
+        - taishan
+        - taishan-x8
+      - - tyres
+        - charging
+        - audio
+        - remote-control
+      - - service-repair
+        - parts-accessories
+        - tuning-detailing
+      - - uz
+        - kz
+      - - encars
+    botPinnedId: 1514528
+    contentHash: f0a568375fd4aafb8606a91937545875359de01e39759a3978982da5e1e4364a

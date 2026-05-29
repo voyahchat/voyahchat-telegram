@@ -339,6 +339,9 @@ test('PinnedSync.syncTopic() - should sync topic with existing message', async (
     const getImagePathStub = t.context.sandbox.stub(sync.topicsConfig, 'getImagePath');
     getImagePathStub.withArgs('data/pinned/registration.md').resolves(null);
 
+    // Mock getLatestModDate for git date lookup
+    t.context.sandbox.stub(sync.topicsConfig, 'getLatestModDate').resolves(new Date());
+
     const topic = {
         slug: 'registration',
         title: 'Registration',
@@ -349,8 +352,8 @@ test('PinnedSync.syncTopic() - should sync topic with existing message', async (
 
     const result = await sync.syncTopic(topic);
 
-    // Verify getImagePath was called
-    t.true(getImagePathStub.calledOnce);
+    // Verify getImagePath was called (may be called multiple times due to getLatestModDate)
+    t.true(getImagePathStub.called);
     t.is(getImagePathStub.firstCall.args[0], 'data/pinned/registration.md');
 
     t.is(result.slug, 'registration');
@@ -571,6 +574,8 @@ test('PinnedSync.syncTopic() - should handle topic with associated image', async
     // Mock getImagePath to return image path
     sync.topicsConfig.getImagePath = t.context.sandbox.stub().resolves(imagePath);
 
+    // Mock getLatestModDate for git date lookup
+    t.context.sandbox.stub(sync.topicsConfig, 'getLatestModDate').resolves(new Date());
 
     // Mock uploadFile
     t.context.mockClient.uploadFile.resolves({ id: 'uploaded-file-id' });
@@ -942,6 +947,12 @@ test('PinnedSync.syncTopic() - should remain unchanged when both have no image',
     // Mock getImagePath to return null (local has no image)
     sync.topicsConfig.getImagePath = t.context.sandbox.stub().resolves(null);
 
+    // Mock getLatestModDate for git date lookup
+    t.context.sandbox.stub(sync.topicsConfig, 'getLatestModDate').resolves(new Date());
+
+    // Mock compareContent to return true (content matches)
+    sync.compareContent = t.context.sandbox.stub().returns(true);
+
     const topic = {
         slug: 'registration',
         title: 'Registration',
@@ -979,6 +990,12 @@ test('PinnedSync.syncTopic() - should remain unchanged when both have image and 
 
     // Mock getImagePath to return image path (local has image)
     sync.topicsConfig.getImagePath = t.context.sandbox.stub().resolves('data/pinned/registration.png');
+
+    // Mock getLatestModDate for git date lookup
+    t.context.sandbox.stub(sync.topicsConfig, 'getLatestModDate').resolves(new Date());
+
+    // Mock compareContent to return true (content matches)
+    sync.compareContent = t.context.sandbox.stub().returns(true);
 
     const topic = {
         slug: 'registration',

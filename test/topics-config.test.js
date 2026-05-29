@@ -692,3 +692,69 @@ test('TopicsConfig.getTopicsForBotSync() - should return null for missing conten
     t.is(topics.length, 1);
     t.is(topics[0].contentHash, null);
 });
+
+test('TopicsConfig.getTopicsForBotSync() - should skip topics with missing topicId', async (t) => {
+    // Arrange
+    const dir = new TestDir();
+    const topicsYaml = yaml.dump({
+        topics: [
+            {
+                slug: 'valid-topic',
+                title: 'Valid Topic',
+                topicId: 12345,
+                pinned: 'data/pinned/valid-topic.md',
+                botPinnedId: 100,
+                contentHash: 'abc123',
+            },
+            {
+                slug: 'missing-topicid',
+                title: 'Missing TopicId',
+                topicid: 99999,
+                pinned: 'data/pinned/missing.md',
+                botpinnedid: 200,
+                contenthash: 'def456',
+            },
+            {
+                slug: 'no-topicid-at-all',
+                title: 'No TopicId At All',
+                pinned: 'data/pinned/no-topicid.md',
+            },
+        ],
+    });
+    await fsPromises.writeFile(path.join(dir.getConfig(), 'topics.yml'), topicsYaml);
+    const config = new TopicsConfig(dir.getRoot());
+
+    // Act
+    const result = await config.getTopicsForBotSync();
+
+    // Assert
+    t.is(result.length, 1);
+    t.is(result[0].slug, 'valid-topic');
+    t.is(result[0].topicId, 12345);
+});
+
+test('TopicsConfig.getTopicsForBotSync() - should include topics with valid topicId', async (t) => {
+    // Arrange
+    const dir = new TestDir();
+    const topicsYaml = yaml.dump({
+        topics: [
+            {
+                slug: 'valid-topic',
+                title: 'Valid Topic',
+                topicId: 12345,
+                pinned: 'data/pinned/valid-topic.md',
+                botPinnedId: 100,
+                contentHash: 'abc123',
+            },
+        ],
+    });
+    await fsPromises.writeFile(path.join(dir.getConfig(), 'topics.yml'), topicsYaml);
+    const config = new TopicsConfig(dir.getRoot());
+
+    // Act
+    const result = await config.getTopicsForBotSync();
+
+    // Assert
+    t.is(result[0].botPinnedId, 100);
+    t.is(result[0].contentHash, 'abc123');
+});
