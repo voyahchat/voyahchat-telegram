@@ -1,29 +1,25 @@
-# A MUST RULES
-- Use English for code, comments and documentation
-- Keep docs brief and technical (NO EMOJI)
-- Use temporary files for complex script validation, not `node -c`
-
-# Backward Compatibility & Build Artifacts
-- DO NOT maintain backward compatibility - breaking changes are acceptable
+# MUST
+- English for code, comments, docs; brief and technical; NO EMOJI
+- No backward compatibility — breaking changes OK
+- Run `npm run lint` before finishing; never `eslint-disable`
 
 # Code Style
-- Follow JavaScript Style Guide from config/config-eslint.mjs
+- Follow config/config-eslint.mjs
 - End files with a single empty line
-- Run `npm run lint` before task is done; never use `eslint-disable`
 
-# Development & Build
-- Use NPM scripts exclusively; they should be silent on success
-- Use `mv` to move files, not read/write operations
+# Build
+- Use NPM scripts only; silent on success
+- Move files with `mv`, not read/write
+- Validate complex scripts via temp files, not `node -c`
 
 # Testing
-- Tests use AVA in `test/` (`*.test.js`), run via `npm test`
-- MUST use TestDir for test isolation - creates isolated directories in `.test/`
-- Test naming: `ClassName.method() - should do X when Y`
-- Use AAA pattern: Arrange-Act-Assert with clear separation
-- Use strict assertions: `t.is()`, `t.deepEqual()` not `t.truthy()`
+- AVA in `test/*.test.js`, run `npm test`
+- Use TestDir for isolation (creates dirs in `.test/`)
+- Naming: `ClassName.method() - should do X when Y`
+- AAA pattern (Arrange-Act-Assert)
+- Strict assertions: `t.is()`, `t.deepEqual()`, not `t.truthy()`
 
-# Module Organization
-- Large modules can be split into focused submodules with a common prefix (e.g., download-*.js)
-- Each submodule should have proper JSDoc documentation with @module tag
-- Create an index file (e.g., download-index.js) to export all functions from submodules
-- Keep related functionality together in the same submodule group
+# Modules
+- Split large modules into prefixed submodules (e.g. download-*.js)
+- Each submodule: JSDoc with @module
+- Index file (e.g. download-index.js) re-exports submodules
