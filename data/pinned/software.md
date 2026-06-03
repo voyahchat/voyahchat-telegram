@@ -54,6 +54,9 @@
 **Yandex Navigator 19.4.0** (Яндекс Навигатор)
 [voyahchat.ru/common/software/yandex-navi](https://voyahchat.ru/common/software/yandex-navi)
 
+**Яндекс Навигатор 3.86** (быстрый!)
+[t.me/voyahchat/558068/1518818](https://t.me/voyahchat/558068/1518818)
+
 **Яндекс Навигатор 14** без рекламы
 [t.me/voyahchat/558068/732526](https://t.me/voyahchat/558068/732526)
 
