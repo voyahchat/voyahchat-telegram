@@ -106,7 +106,7 @@ topics:
     topicId: 792213
     pinned: data/pinned/remote-control.md
     botPinnedId: 1514446
-    contentHash: 3f1ababede231f48185af7eb17babf29cedda6a046f5948f52a6724da025426b
+    contentHash: e571563308b1cd2abdd70c6f5dde794a5bdb965d4540a7b0bcc9c5d62cb37284
   - title: Флудилка
     slug: flood
     topicId: 1
