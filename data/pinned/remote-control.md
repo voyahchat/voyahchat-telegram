@@ -5,3 +5,6 @@
 
 **Аккуратнее с движением из приложения**
 [t.me/voyahchat/792213/829603](https://t.me/voyahchat/792213/829603)
+
+**Remote Private Control** — удалённое управление Voyah Free 2024-2025 через оригинальный TBOX
+[t.me/voyahchat/792213/1523674](https://t.me/voyahchat/792213/1523674)
