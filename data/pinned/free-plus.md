@@ -1,15 +1,6 @@
 **Платные услуги чата**
 [voyahchat.ru/help](https://voyahchat.ru/help)
 
-**Перепайка SIM в Москве на Free+**
-[voyahchat.ru/help#москва-sim](https://voyahchat.ru/help#москва-sim)
-
-**Обновление прошивки в Москве на Free+**
-[voyahchat.ru/help#москва-прошивка](https://voyahchat.ru/help#москва-прошивка)
-
-**Активация ADS в Москве на Free+**
-[voyahchat.ru/help#москва-прошивка](https://voyahchat.ru/help#москва-прошивка)
-
 **Сим-карта для обновления прошивки**
 [t.me/voyahchat/1020935/1508718](https://t.me/voyahchat/1020935/1508718)
 
