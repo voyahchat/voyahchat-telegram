@@ -299,6 +299,49 @@ test('BotSync.syncTopic() - should recreate message when message was deleted', a
     t.is(updatedTopic.botPinnedId, 1000); // New ID, not old 500
 });
 
+test('BotSync.syncTopic() - should recreate as text when photo message has no text to edit', async (t) => {
+    const topicsConfig = await setupTestDir(t);
+    const mockApi = createMockBotApi();
+
+    // Existing message is a photo: editMessageText fails with "there is no text"
+    const noTextErr = new Error('there is no text in the message to edit');
+    noTextErr.description = 'Bad Request: there is no text in the message to edit';
+    mockApi.editMessageText.rejects(noTextErr);
+
+    const sync = new BotSync({
+        chatId: '-100123',
+        botApi: mockApi,
+        topicsConfig,
+    });
+
+    // charging topic has botPinnedId=500 and an image, but caption exceeds the
+    // photo limit so the image is skipped and editMessageText is attempted.
+    // Make the content long enough to exceed CAPTION_MAX_LENGTH (1024).
+    const pinnedDir = t.context.dir.getPinned();
+    await fsPromises.writeFile(
+        path.join(pinnedDir, 'charging.md'),
+        '**Зарядка и батарея**\n\n' + 'x'.repeat(1100),
+    );
+
+    const topic = await topicsConfig.getTopic('charging');
+    const result = await sync.syncTopic(topic);
+
+    // Should recreate as a text-only message, not fail
+    t.is(result.action, 'recreated');
+    t.is(result.messageId, 1000); // sendMessage returns 1000
+    t.is(mockApi.editMessageText.callCount, 1); // Attempted edit first
+    t.is(mockApi.deleteMessage.callCount, 2); // Old message + pin service message
+    const deleteArgs = mockApi.deleteMessage.firstCall.args[0];
+    t.is(deleteArgs.messageId, 500); // Old message ID
+    t.is(mockApi.sendMessage.callCount, 1); // New text message published
+    t.is(mockApi.sendPhoto.callCount, 0); // No photo in recreation
+    t.is(mockApi.pinChatMessage.callCount, 1); // New message pinned
+
+    // Config updated with the new message ID
+    const updatedTopic = await topicsConfig.getTopic('charging');
+    t.is(updatedTopic.botPinnedId, 1000);
+});
+
 test('BotSync.syncTopic() - should return unchanged when message exists and not modified', async (t) => {
     const topicsConfig = await setupTestDir(t);
     const mockApi = createMockBotApi();
