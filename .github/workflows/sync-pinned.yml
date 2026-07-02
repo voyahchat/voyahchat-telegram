@@ -2,9 +2,6 @@ name: Sync Pinned Messages
 
 on:
   push:
-    paths:
-      - 'data/pinned/**'
-      - 'config/topics.yml'
     branches:
       - main
   schedule:
