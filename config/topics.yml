@@ -3,8 +3,8 @@ topics:
     slug: charging
     topicId: 11517
     pinned: data/pinned/charging.md
-    botPinnedId: 1413222
-    contentHash: d63d6a68cdf258804d0e579b0c03c9ad7af2eae6b12656cd92beb883263e1d4e
+    botPinnedId: 1554573
+    contentHash: eec3f36a7d77685e3e11665d04bddf34638ea8a2ec6db4516af188a56f95a6c6
   - title: Aвтозвук
     slug: audio
     topicId: 578617
@@ -94,7 +94,7 @@ topics:
     topicId: 72117
     pinned: data/pinned/passion.md
     botPinnedId: 1514489
-    contentHash: 600a89d74e92de0abd18a2a817f3d8548fe4406d6cc80aed17fa24b1abb1e7cf
+    contentHash: 61350b6ab14cfadcb22ec6a46e262e21d87a8b3e1cd82a699ee8dab1efa00dc6
   - title: Запчасти | Аксессуары
     slug: parts-accessories
     topicId: 8976
@@ -201,4 +201,4 @@ topics:
         - kz
       - - encars
     botPinnedId: 1514528
-    contentHash: dbefc95753ab98ce56bd68b0fb672d8fc2c4bc4205120e4d7d6f1df49b9882b7
+    contentHash: 17ac64cc9ef6514411dab0994ebd6c4c4ac701cb080c636d285b00896eee78fe
