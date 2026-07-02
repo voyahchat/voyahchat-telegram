@@ -35,7 +35,7 @@
 [t.me/voyahchat/72117/852294](https://t.me/voyahchat/72117/852294)
 
 **Как исправить ложные срабатывания передних парктроников**
-[https://t.me/voyahchat/72117/1513663](https://t.me/voyahchat/72117/1513663)
+[t.me/voyahchat/72117/1513663](https://t.me/voyahchat/72117/1513663)
 
 ---
 
