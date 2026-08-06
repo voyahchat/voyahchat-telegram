@@ -1,8 +1,8 @@
 **Платные услуги чата**
 [voyahchat.ru/help](https://voyahchat.ru/help)
 
-**Платная установка приложений на Voyah Courage в Москве**
-[t.me/voyahchat/133592/135830](https://t.me/voyahchat/133592/135830)
+**Платная установка приложений на Voyah Courage**
+[voyahchat.ru/help/software](https://voyahchat.ru/help/software)
 
 **Установка времени на Courage**
 [t.me/voyahchat/601095/982472](https://t.me/voyahchat/601095/982472)
