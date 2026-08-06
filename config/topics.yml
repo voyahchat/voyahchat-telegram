@@ -28,7 +28,7 @@ topics:
     topicId: 601095
     pinned: data/pinned/courage.md
     botPinnedId: 1413239
-    contentHash: 6aba1dc2fd56f612dca9c3ddb892730cb51c33d9a45da8e67f2325f7fad74b30
+    contentHash: 6c14d990fb3202a75e6c9afd62dca4885b462c0ed103d091eb99b7b1838ddf29
   - title: Прошивка Free и Dreamer | SIM
     slug: firmware
     topicId: 11800
