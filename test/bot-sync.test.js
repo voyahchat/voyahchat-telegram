@@ -268,6 +268,12 @@ test('BotSync.syncTopic() - should handle MESSAGE_NOT_MODIFIED', async (t) => {
 
     // Should be marked as unchanged, not failed
     t.is(result.action, 'unchanged');
+    t.is(mockApi.pinChatMessage.callCount, 1);
+    t.deepEqual(mockApi.pinChatMessage.firstCall.args[0], {
+        chatId: '-100123',
+        messageId: 500,
+        disableNotification: true,
+    });
 });
 
 test('BotSync.syncTopic() - should recreate message when message was deleted', async (t) => {
@@ -363,7 +369,7 @@ test('BotSync.syncTopic() - should return unchanged when message exists and not 
     t.is(result.action, 'unchanged');
     t.is(mockApi.editMessageMedia.callCount, 1);
     t.is(mockApi.sendPhoto.callCount, 0); // Should NOT recreate
-    t.is(mockApi.pinChatMessage.callCount, 0); // Should NOT pin
+    t.is(mockApi.pinChatMessage.callCount, 1); // Ensure the current message is pinned
 
     // Verify that config was NOT updated (no changes)
     const updatedTopic = await topicsConfig.getTopic('charging');
