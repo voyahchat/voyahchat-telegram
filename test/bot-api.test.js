@@ -258,3 +258,10 @@ test('BotApi.isMessageNotFound() - should detect not found error', (t) => {
     t.false(BotApi.isMessageNotFound(new Error('other')));
     t.false(BotApi.isMessageNotFound(null));
 });
+
+test('BotApi.isMessageNotFound() - should detect mixed-case not Found error', (t) => {
+    const err = new Error('API error');
+    err.description = 'Bad Request: not Found';
+
+    t.true(BotApi.isMessageNotFound(err));
+});
