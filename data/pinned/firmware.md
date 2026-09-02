@@ -7,6 +7,9 @@
 **Актуальные версии прошивок Voyah Free**
 [voyahchat.ru/free/firmware](https://voyahchat.ru/free/firmware)
 
+**Как протолкнуть прошивку 7.2.0, застрявшую на 0%**
+[t.me/voyahchat/11800/1614460](https://t.me/voyahchat/11800/1614460)
+
 **Обновление на 6.6.1, если прошивка «застряла»**
 [t.me/voyahchat/11800/975515](https://t.me/voyahchat/11800/975515)
 [t.me/voyahchat/11800/990438](https://t.me/voyahchat/11800/990438) (Mac)
@@ -56,6 +59,9 @@
 
 **Узнать номер телефона Мегафона в машине ОД**
 [t.me/voyahchat/30944/1105068](https://t.me/voyahchat/30944/1105068)
+
+**Восстановить деактивированный номер в машине от ОД через поддержку**
+[t.me/voyahchat/11800/1625609](https://t.me/voyahchat/11800/1625609)
 
 **Новая прошивка Моторинвеста для дорест33 8155**
 [t.me/voyahchat/11800/740338](https://t.me/voyahchat/11800/740338)
