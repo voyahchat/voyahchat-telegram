@@ -34,7 +34,7 @@ topics:
     topicId: 11800
     pinned: data/pinned/firmware.md
     botPinnedId: 1440215
-    contentHash: ec48efc6d0df9ffc272ac1438f7b738fbd7b887e97065bc6f0c4720eba6dad3c
+    contentHash: b0e033398aff3b36df9de123820dd893114b38d4e0a3f26504f7569cfaa421aa
   - title: Мастер аккаунт (МА) | WeChat/eSender | Приложение Lantu
     slug: ma
     topicId: 177128
