@@ -100,7 +100,7 @@ topics:
     topicId: 8976
     pinned: data/pinned/parts-accessories.md
     botPinnedId: 1514616
-    contentHash: 15f7ff58dcc64762fd918f0666ae548ea3adc0f34d2a5b38be7b037bf3399511
+    contentHash: 4ddc0a255990c33e9dd76890fce7824cbb6c1e6444f4c8d46a82a2671693834e
   - title: Удалённое управление
     slug: remote-control
     topicId: 792213
