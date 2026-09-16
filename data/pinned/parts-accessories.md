@@ -1,4 +1,4 @@
-Продажа б/у в [Барахолке,](https://t.me/voyahchat/43927/43930) коммерческие объявления — в [Объявлениях.](https://t.me/voyahchat/133586/133736)
+Продажа в [VoyahChatMarketPlace](https://t.me/VoyahChatMarketPlace).
 
 **Платные услуги чата**
 [voyahchat.ru/help](https://voyahchat.ru/help)
