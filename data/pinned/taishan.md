@@ -18,3 +18,6 @@
 
 **Что делать при просадке 12v**
 [t.me/voyahchat/1101631/1459272](https://t.me/voyahchat/1101631/1459272)
+
+**https://t.me/voyahchat/1101631/1653751**
+[t.me/voyahchat/1101631/1653751](https://t.me/voyahchat/1101631/1653751)
