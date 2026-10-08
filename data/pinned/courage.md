@@ -10,5 +10,8 @@
 **Пароль для инженерного меню**
 [t.me/voyahchat/601095/982473](https://t.me/voyahchat/601095/982473)
 
+**Инструкция на русском**
+[t.me/voyahchat/601095/1660345](https://t.me/voyahchat/601095/1660345)
+
 **Инструкция на китайском**
 [m.voyah.com.cn/userguide/h37/h37-16.html](https://m.voyah.com.cn/userguide/h37/h37-16.html)
