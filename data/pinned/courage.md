@@ -4,6 +4,9 @@
 **Платная установка приложений на Voyah Courage**
 [voyahchat.ru/help/software](https://voyahchat.ru/help/software)
 
+**Courage+ — расширение возможностей Courage**
+[courage-plus.tilda.ws](https://courage-plus.tilda.ws)
+
 **Установка времени на Courage**
 [t.me/voyahchat/601095/982472](https://t.me/voyahchat/601095/982472)
 
