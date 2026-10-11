@@ -81,8 +81,8 @@ topics:
     slug: taishan
     topicId: 1101631
     pinned: data/pinned/taishan.md
-    botPinnedId: 1514440
-    contentHash: 11e08940add4255ac8a003fe0438504efe20a7b6f26926ae824691d8b1545526
+    botPinnedId: 1663642
+    contentHash: 9a32040ecd8d774297616c54d2b5458d6639d4fa927ed78e7408699a9d4e1077
   - title: Taishan X8
     slug: taishan-x8
     topicId: 1436335
@@ -201,4 +201,4 @@ topics:
         - kz
       - - encars
     botPinnedId: 1514528
-    contentHash: 17ac64cc9ef6514411dab0994ebd6c4c4ac701cb080c636d285b00896eee78fe
+    contentHash: 518041b9530314e72f13da6f0e10391b93756c319cbeb982cf3a8538646ca09d
