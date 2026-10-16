@@ -105,8 +105,8 @@ topics:
     slug: remote-control
     topicId: 792213
     pinned: data/pinned/remote-control.md
-    botPinnedId: 1514446
-    contentHash: e571563308b1cd2abdd70c6f5dde794a5bdb965d4540a7b0bcc9c5d62cb37284
+    botPinnedId: 1668801
+    contentHash: 228c6db820e0fd89ef34e6d56b35725845f936a3a9c85c8d218dd292c55d05dd
   - title: Флудилка
     slug: flood
     topicId: 1
@@ -201,4 +201,4 @@ topics:
         - kz
       - - encars
     botPinnedId: 1514528
-    contentHash: 518041b9530314e72f13da6f0e10391b93756c319cbeb982cf3a8538646ca09d
+    contentHash: b4f25eaa58ded50b4decf1533fbf49be6d6b0c669449af452ba2854f7d595c8d
