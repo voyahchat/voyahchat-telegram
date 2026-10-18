@@ -161,6 +161,10 @@ topics:
     pinned: data/pinned/kz.md
     botPinnedId: 1514498
     contentHash: d10c5b78c99d521a4812df6169d0809f6216592167ec94ecb713b7959742a4e9
+  - title: Voyemu — эмулятор машины
+    slug: voyemu
+    topicId: 1671117
+    pinned: data/pinned/voyemu.md
   - title: Правила чата
     slug: rules
     topicId: 8978
