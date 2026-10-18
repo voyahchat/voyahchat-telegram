@@ -166,7 +166,7 @@ topics:
     topicId: 1671117
     pinned: data/pinned/voyemu.md
     botPinnedId: 1671123
-    contentHash: 0b7b5138b51bc2ff08c8720c738d31c7f34c987483cd8dcad9abe72df86a1a5d
+    contentHash: 58d6ceadcad4744ca2bdbcb1d5be1f6a072e91dc157e8b3de1ad97ed868927e0
   - title: Правила чата
     slug: rules
     topicId: 8978
