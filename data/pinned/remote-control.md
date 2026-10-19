@@ -7,7 +7,7 @@
 [t.me/voyahchat/792213/829603](https://t.me/voyahchat/792213/829603)
 
 **Восстановление связи с официальными серверами Voyah на машинах параллельного импорта**
-[t.me/voyahchat/792213/1668646](https://t.me/voyahchat/792213/1668646)
+[t.me/voyahchat/792213/1672083](https://t.me/voyahchat/792213/1672083)
 
 **Remote Private Control** — удалённое управление Voyah Free 2024-2025 через оригинальный TBOX
 [t.me/voyahchat/792213/1523674](https://t.me/voyahchat/792213/1523674)
