@@ -259,9 +259,51 @@ test('BotApi.isMessageNotFound() - should detect not found error', (t) => {
     t.false(BotApi.isMessageNotFound(null));
 });
 
-test('BotApi.isMessageNotFound() - should detect mixed-case not Found error', (t) => {
-    const err = new Error('API error');
-    err.description = 'Bad Request: not Found';
+test('BotApi.isMessageNotFound() - should reject errors that do not identify a missing edit target', (t) => {
+    // Arrange
+    const descriptions = [
+        'Bad Request: message not found',
+        'Bad Request: not Found',
+        'Bad Request: chat not found',
+        'Bad Request: message thread not found',
+        'Bad Request: reply message not found',
+        'Not Found',
+    ];
 
-    t.true(BotApi.isMessageNotFound(err));
+    for (const description of descriptions) {
+        const err = new Error('API error');
+        err.description = description;
+
+        // Act
+        const result = BotApi.isMessageNotFound(err);
+
+        // Assert
+        t.is(result, false, description);
+    }
+});
+
+test('BotApi.isEditResultMissing() - should distinguish missing results from missing edit targets', (t) => {
+    // Arrange
+    const cases = [
+        ['Bad Request: message not found', true],
+        ['Bad Request: MESSAGE NOT FOUND', true],
+        ['Bad Request: message to edit not found', false],
+        ['Bad Request: MESSAGE_ID_INVALID', false],
+        ['Bad Request: chat not found', false],
+        ['Not Found', false],
+    ];
+
+    for (const [description, expected] of cases) {
+        const err = new Error('API error');
+        err.description = description;
+
+        // Act
+        const result = BotApi.isEditResultMissing(err);
+
+        // Assert
+        t.is(result, expected, description);
+    }
+
+    t.is(BotApi.isEditResultMissing(new Error('Network error')), false);
+    t.is(BotApi.isEditResultMissing(null), false);
 });

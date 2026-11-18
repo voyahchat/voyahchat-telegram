@@ -249,6 +249,92 @@ test('BotSync.syncTopic() - should handle message not found by recreating', asyn
     t.is(updatedTopic.botPinnedId, 1000); // New ID, not old 500
 });
 
+test('BotSync.syncTopic() - should retry the same message when the edit result is missing', async (t) => {
+    // Arrange
+    const topicsConfig = await setupTestDir(t);
+    const mockApi = createMockBotApi();
+    const missingResultErr = new Error('Bot API error: Bad Request: message not found');
+    missingResultErr.description = 'Bad Request: message not found';
+    const notModifiedErr = new Error('Bot API error: Bad Request: message is not modified');
+    notModifiedErr.description = 'Bad Request: message is not modified';
+    mockApi.editMessageText.onFirstCall().rejects(missingResultErr);
+    mockApi.editMessageText.onSecondCall().rejects(notModifiedErr);
+    const sync = new BotSync({ chatId: '-100123', botApi: mockApi, topicsConfig });
+    const topic = await topicsConfig.getTopic('registration');
+    await topicsConfig.updateBotPinnedId(topic.slug, 500);
+
+    // Act
+    const result = await sync.syncTopic(topic);
+    const savedTopic = await new TopicsConfig(t.context.dir.getRoot()).getTopic(topic.slug);
+
+    // Assert
+    t.is(result.action, 'unchanged');
+    t.is(result.messageId, 500);
+    t.deepEqual(mockApi.editMessageText.getCalls().map(call => call.args[0].messageId), [500, 500]);
+    t.is(mockApi.sendMessage.callCount, 0);
+    t.is(mockApi.sendPhoto.callCount, 0);
+    t.is(mockApi.deleteMessage.callCount, 0);
+    t.deepEqual(mockApi.pinChatMessage.firstCall.args[0], {
+        chatId: '-100123',
+        messageId: 500,
+        disableNotification: true,
+    });
+    t.is(savedTopic.botPinnedId, 500);
+    t.is(savedTopic.contentHash, result.contentHash);
+});
+
+test('BotSync.syncTopic() - should preserve message state when edit results remain missing', async (t) => {
+    // Arrange
+    const topicsConfig = await setupTestDir(t);
+    const mockApi = createMockBotApi();
+    const missingResultErr = new Error('Bot API error: Bad Request: message not found');
+    missingResultErr.description = 'Bad Request: message not found';
+    mockApi.editMessageMedia.rejects(missingResultErr);
+    const sync = new BotSync({ chatId: '-100123', botApi: mockApi, topicsConfig });
+    const topic = await topicsConfig.getTopic('charging');
+    await topicsConfig.updateContentHash(topic.slug, 'previous-hash');
+
+    // Act
+    const result = await sync.syncTopic(topic);
+    const savedTopic = await new TopicsConfig(t.context.dir.getRoot()).getTopic(topic.slug);
+
+    // Assert
+    t.is(result.action, 'failed');
+    t.is(result.error, missingResultErr.message);
+    t.deepEqual(mockApi.editMessageMedia.getCalls().map(call => call.args[0].messageId), [500, 500, 500, 500]);
+    t.is(mockApi.sendMessage.callCount, 0);
+    t.is(mockApi.sendPhoto.callCount, 0);
+    t.is(mockApi.pinChatMessage.callCount, 0);
+    t.is(mockApi.deleteMessage.callCount, 0);
+    t.is(savedTopic.botPinnedId, 500);
+    t.is(savedTopic.contentHash, 'previous-hash');
+});
+
+test('BotSync.syncTopic() - should not repeat publication when pinning reports a missing message', async (t) => {
+    // Arrange
+    const topicsConfig = await setupTestDir(t);
+    const mockApi = createMockBotApi();
+    const pinErr = new Error('Bot API error: Bad Request: message not found');
+    pinErr.description = 'Bad Request: message not found';
+    mockApi.pinChatMessage.rejects(pinErr);
+    const sync = new BotSync({ chatId: '-100123', botApi: mockApi, topicsConfig });
+    const topic = await topicsConfig.getTopic('registration');
+
+    // Act
+    const result = await sync.syncTopic(topic);
+    const savedTopic = await new TopicsConfig(t.context.dir.getRoot()).getTopic(topic.slug);
+
+    // Assert
+    t.is(result.action, 'failed');
+    t.is(result.error, pinErr.message);
+    t.is(mockApi.sendMessage.callCount, 1);
+    t.is(mockApi.pinChatMessage.callCount, 1);
+    t.is(mockApi.editMessageText.callCount, 0);
+    t.is(mockApi.deleteMessage.callCount, 0);
+    t.is(savedTopic.botPinnedId, undefined);
+    t.is(savedTopic.contentHash, undefined);
+});
+
 test('BotSync.syncTopic() - should handle MESSAGE_NOT_MODIFIED', async (t) => {
     const topicsConfig = await setupTestDir(t);
     const mockApi = createMockBotApi();
