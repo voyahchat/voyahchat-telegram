@@ -26,4 +26,4 @@
 [t.me/voyahchat/11517/1549109](https://t.me/voyahchat/11517/1549109)
 
 **Voyah Charge Config — сервисный набор для зарядных станций Voyah VOY-A0070**
-[t.me/voyahchat/11517/1666740](https://t.me/voyahchat/11517/1666740)
+[t.me/voyahchat/11517/1699478](https://t.me/voyahchat/11517/1699478)
