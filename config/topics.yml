@@ -141,6 +141,8 @@ topics:
     slug: voyahtune
     topicId: 1704987
     pinned: data/pinned/voyahtune.md
+    botPinnedId: 1705022
+    contentHash: a39497ad0be4513a0885a774724138428a544ca689e5e35f77037dd057cebd83
   - title: Voyah Dreamer
     slug: dreamer
     topicId: 44496
@@ -212,4 +214,4 @@ topics:
         - kz
       - - encars
     botPinnedId: 1514528
-    contentHash: 4c1d5193c755924364704d9988da7624756745a73e2064e2a07c7ba7ef664d1e
+    contentHash: e7818264bacaf0594601366e8b552b4f23fc9c26382d6615eb5ea9f7a5d30d8a
