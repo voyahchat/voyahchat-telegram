@@ -4,3 +4,6 @@ VoyahTune — **бесплатное** приложение для Free 2024-202
 
 **Сайт проекта: возможности, загрузка и инструкции**
 [voyahtune.ru](https://voyahtune.ru)
+
+**Возможности (docx)**
+[t.me/voyahchat/1704987/1705330](https://t.me/voyahchat/1704987/1705330)
