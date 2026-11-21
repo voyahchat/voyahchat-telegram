@@ -4,7 +4,7 @@ topics:
     topicId: 11517
     pinned: data/pinned/charging.md
     botPinnedId: 1705395
-    contentHash: e8a3d45f25ae6cd24842b7f05ab3d42ee338ac06672e42146ec01285ed276213
+    contentHash: 5fc421da5e68c39d67889306b98a9d4107bebc1f41af8c0abd65eb71cd77c769
   - title: Aвтозвук
     slug: audio
     topicId: 578617
