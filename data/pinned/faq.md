@@ -11,6 +11,7 @@
 
 [Установка/настройка приложений на Free, Dreamer, Passion](https://t.me/voyahchat/558068/1514494)
 [VoyahTweaks](https://t.me/voyahchat/413159/1514450)
+[VoyahTune](https://t.me/voyahchat/1704987)
 [CunBA](https://t.me/voyahchat/67145/1471292)
 [Pasiqo — Passion лаунчер](https://t.me/voyahchat/1458628/1458631)
 

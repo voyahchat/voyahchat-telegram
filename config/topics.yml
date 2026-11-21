@@ -137,6 +137,10 @@ topics:
     pinned: data/pinned/voyahtweaks.md
     botPinnedId: 1514450
     contentHash: cd97518279a62b4a0c527ee0382a9c471115e4eefce7d8b03d12938e5fec0f38
+  - title: VoyahTune
+    slug: voyahtune
+    topicId: 1704987
+    pinned: data/pinned/voyahtune.md
   - title: Voyah Dreamer
     slug: dreamer
     topicId: 44496
@@ -186,6 +190,7 @@ topics:
       - - ma
       - - software
       - - voyahtweaks
+        - voyahtune
         - pasiqo
         - cunba
       - - free
