@@ -3,8 +3,8 @@ topics:
     slug: charging
     topicId: 11517
     pinned: data/pinned/charging.md
-    botPinnedId: 1554573
-    contentHash: 06d619b712a7ab278a59bd948d81d45ae5a11644fb243eb0011d46185cc0997b
+    botPinnedId: 1705395
+    contentHash: e8a3d45f25ae6cd24842b7f05ab3d42ee338ac06672e42146ec01285ed276213
   - title: Aвтозвук
     slug: audio
     topicId: 578617
@@ -214,4 +214,4 @@ topics:
         - kz
       - - encars
     botPinnedId: 1514528
-    contentHash: e7818264bacaf0594601366e8b552b4f23fc9c26382d6615eb5ea9f7a5d30d8a
+    contentHash: ed03aa874233b03e462a88f5a59cd4d992e5380fb538554cae15e50d81cd45c9
