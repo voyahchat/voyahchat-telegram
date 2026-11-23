@@ -94,7 +94,7 @@ topics:
     topicId: 72117
     pinned: data/pinned/passion.md
     botPinnedId: 1514489
-    contentHash: d86813cd3c50cbf2c5348d17d290fa1928afad9a256874ff082ab89912c09226
+    contentHash: c61c6a4fa2b46318205f7f3cf7b2a62b7ad3a49f0212b979f8125cfcc4316000
   - title: Запчасти | Аксессуары
     slug: parts-accessories
     topicId: 8976
