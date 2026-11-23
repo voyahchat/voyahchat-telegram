@@ -1,8 +1,8 @@
 **Платная помощь участникам чата**
 [voyahchat.ru/help](https://voyahchat.ru/help)
 
-**Passion NG — расширение возможностей Passion**
-[passion-ng.ru](https://passion-ng.ru/install?utm_source=telegram&utm_medium=messenger&utm_campaign=voyah_chat)
+**Passion NG — лаунчер с голосовым ассистентом, расширение функциональности Passion, бесплатный и по подписке**
+[passion-ng.ru](https://passion-ng.ru/?utm_source=telegram&utm_medium=messenger&utm_campaign=voyah_chat)
 
 **Руководство пользователя**
 [voyahchat.ru/passion/voyah-passion-phev-2023-user-manual-rus.pdf](https://voyahchat.ru/passion/voyah-passion-phev-2023-user-manual-rus.pdf)
@@ -48,8 +48,8 @@
 [voyahchat.ru/common/android-settings](https://voyahchat.ru/common/android-settings)
 [t.me/voyahchat/72117/711108](https://t.me/voyahchat/72117/711108)
 
-**Passion NG — расширение возможностей Passion**
-[passion-ng.ru](https://passion-ng.ru/install?utm_source=telegram&utm_medium=messenger&utm_campaign=voyah_chat)
+**Passion NG — лаунчер с голосовым ассистентом, расширение функциональности Passion, бесплатный и по подписке**
+[passion-ng.ru](https://passion-ng.ru/?utm_source=telegram&utm_medium=messenger&utm_campaign=voyah_chat)
 
 **Pasiqo — лаунчер для Passion**
 [t.me/voyahchat/1458628/1458631](https://t.me/voyahchat/1458628/1458631)
